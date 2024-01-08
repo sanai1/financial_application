@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/drawer_layout_id"
+    tools:context=".MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <include
+            android:id="@+id/include_menu"
+            layout="@layout/main"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <Button
+            android:id="@+id/button_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            android:onClick="save_expense"
+            android:text="СОХРАНИТЬ"
+            app:layout_constraintBottom_toBottomOf="@+id/include_menu"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="135dp"
+            android:layout_height="67dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginBottom="35dp"
+            android:text="ДАТА"
+            android:textSize="50dp"
+            app:layout_constraintBottom_toTopOf="@+id/button_save"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginBottom="15dp"
+            android:text="СУММА"
+            android:textSize="50dp"
+            app:layout_constraintBottom_toTopOf="@+id/checkBox_bid_purchase"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButtonAddCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="35dp"
+            android:layout_marginBottom="40dp"
+            android:clickable="true"
+            android:onClick="add_category_in_mainactivity"
+            app:layout_constraintBottom_toTopOf="@+id/textView2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@android:drawable/ic_input_add" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginBottom="50dp"
+            android:text="ДОБАВИТЬ КАТЕГОРИЮ"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView2"
+            app:layout_constraintStart_toEndOf="@+id/floatingActionButtonAddCategory" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:layout_marginStart="35dp"
+            android:text="КАТЕГОРИЯ"
+            android:textSize="30dp"
+            app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonAddCategory"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginBottom="50dp"
+            app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonAddCategory"
+            app:layout_constraintStart_toEndOf="@+id/textView4" />
+
+        <EditText
+            android:id="@+id/editTextTextSum"
+            android:layout_width="125dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginBottom="20dp"
+            android:ems="10"
+            android:inputType="number"
+            android:text=""
+            app:layout_constraintBottom_toTopOf="@+id/checkBox_bid_purchase"
+            app:layout_constraintStart_toEndOf="@+id/textView2" />
+
+        <EditText
+            android:id="@+id/editTextDate"
+            android:layout_width="125dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginBottom="50dp"
+            android:ems="10"
+            android:inputType="date"
+            app:layout_constraintBottom_toTopOf="@+id/button_save"
+            app:layout_constraintStart_toEndOf="@+id/textView" />
+
+        <Button
+            android:id="@+id/button_income"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="100dp"
+            android:onClick="income"
+            android:text="ДОХОД"
+            app:layout_constraintStart_toEndOf="@+id/button_expense"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/checkBox_bid_purchase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginBottom="20dp"
+            android:text="КРУПНАЯ ПОКУПКА"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/button_expense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="75dp"
+            android:layout_marginTop="100dp"
+            android:enabled="false"
+            android:onClick="expense"
+            android:text="РАСХОД"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/menu_title"
+        app:menu="@menu/navigation_menu"
+        android:id="@+id/navigator_view_id"/>
+</androidx.drawerlayout.widget.DrawerLayout>
