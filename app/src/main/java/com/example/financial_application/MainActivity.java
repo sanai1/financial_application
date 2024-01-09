@@ -5,9 +5,10 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.financial_application.databinding.ActivityMainBinding;
@@ -15,12 +16,14 @@ import com.example.financial_application.databinding.AddCategoryBinding;
 import com.google.android.material.navigation.NavigationView;
 
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements CategoryDialog.DialogListenerAdd{
     ActivityMainBinding binding_activity_main;
     AddCategoryBinding binding_add_category;
     DBHelper dbHelper;
     boolean expense = true;
-    DialogFragment dialog_category;
+    CategoryDialog dialog_category;
+    String [] mas_test = {"one", "two", "three"};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +34,19 @@ public class MainActivity extends FragmentActivity {
 
         NavigationView navigationView = findViewById(R.id.navigator_view_id);
 
+
         binding_activity_main = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding_activity_main.getRoot());
 
         dbHelper = new DBHelper(this);
 
         dialog_category = new CategoryDialog();
+        dialog_category.setMyDialogListener(this);
+
+        Spinner spinner = findViewById(R.id.spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_test);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        spinner.setAdapter(adapter);
     }
 
     public void income(View view) {
@@ -54,61 +64,62 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void add_category_in_mainactivity(View view) {
-//        CategoryDialog dialog_category = new CategoryDialog();
-//        dialog_category.show(getSupportFragmentManager(), "dialogCategory");
-
-//        dialog_category = new Dialog(MainActivity.this);
-//        dialog_category.setContentView(R.layout.add_category);
-//        dialog_category.show();
-
+        System.out.println("no");
         dialog_category.show(getSupportFragmentManager(), "dialogCategory");
+        System.out.println("yes");
+    }
+    @Override
+    public void onDialogClickListener(String name_categoty, int expense) {
+        binding_add_category = AddCategoryBinding.inflate(getLayoutInflater());
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
 
+        contentValues.put(DBHelper.COLUMN_EXPENSE, expense);
+        contentValues.put(DBHelper.COLUMN_CATEGORY_T_C, name_categoty);
 
+        database.insert(DBHelper.TABLE_CATEGORY, null, contentValues);
+        System.out.println(true);
 
-//        btn_income.setOnClickListener(listener_one);
+        binding_add_category.editTextTextNameCategoryAddCategory.setText("Название категории");
+        binding_add_category.radioButtonExpense.setChecked(false);
+        binding_add_category.buttonAddAddCategory.setEnabled(false);
 
-
-//        onClick(btn_income);
-//        btn_income.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                System.out.println(true);
-//                btn_income.setEnabled(false);
-//                System.out.println(false);
-//            }
-//        });
-
-
+        System.out.println(false);
     }
 
 
 
     public void menu(View view) {
+
     }
 
     public void save_expense(View view) {
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
+        if (binding_activity_main.editTextNumberSum.getText().length() != 0 && binding_activity_main.editTextDate.getText().length() != 0) {
+            SQLiteDatabase database = dbHelper.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
 
-        if (expense) {
-            contentValues.put(DBHelper.COLUMN_EXPENDITURE, 1);
-            if (binding_activity_main.checkBoxBidPurchase.isChecked()) {
-                contentValues.put(DBHelper.COLUMN_BIG_PURCHASE, 1);
+            if (expense) {
+                contentValues.put(DBHelper.COLUMN_EXPENDITURE, 1);
+                if (binding_activity_main.checkBoxBidPurchase.isChecked()) {
+                    contentValues.put(DBHelper.COLUMN_BIG_PURCHASE, 1);
+                } else {
+                    contentValues.put(DBHelper.COLUMN_BIG_PURCHASE, 0);
+                }
             } else {
-                contentValues.put(DBHelper.COLUMN_BIG_PURCHASE, 0);
+                contentValues.put(DBHelper.COLUMN_EXPENDITURE, 0);
             }
+
+            double sum = Double.parseDouble(binding_activity_main.editTextNumberSum.getText().toString());
+            String add_data = binding_activity_main.editTextDate.getText().toString();
+            contentValues.put(DBHelper.COLUMN_SUM, sum);
+            contentValues.put(DBHelper.COLUMN_ADD_DATA, add_data);
+
+            database.insert(DBHelper.TABLE_HISTORY, null, contentValues);
         } else {
-            contentValues.put(DBHelper.COLUMN_EXPENDITURE, 0);
+            System.out.println(true);
         }
-
-        double sum = Double.parseDouble(binding_activity_main.editTextTextSum.getText().toString());
-        String add_data = binding_activity_main.editTextDate.getText().toString();
-        contentValues.put(DBHelper.COLUMN_SUM, sum);
-        contentValues.put(DBHelper.COLUMN_ADD_DATA, add_data);
-
-        database.insert(DBHelper.TABLE_HISTORY, null, contentValues);
-
     }
+
 
 
 }

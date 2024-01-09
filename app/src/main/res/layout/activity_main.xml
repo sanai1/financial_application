@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <include
             android:id="@+id/include_menu"
             layout="@layout/main"
@@ -95,7 +94,7 @@
             app:layout_constraintStart_toEndOf="@+id/textView4" />
 
         <EditText
-            android:id="@+id/editTextTextSum"
+            android:id="@+id/editTextNumberSum"
             android:layout_width="125dp"
             android:layout_height="45dp"
             android:layout_marginStart="50dp"

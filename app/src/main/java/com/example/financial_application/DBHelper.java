@@ -19,13 +19,14 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         String command_one = "create table " + TABLE_HISTORY + "(" + COLUMN_CATEGORY_T_H + " text primary key," + COLUMN_EXPENDITURE + " integer,"
                 + COLUMN_BIG_PURCHASE + " integer," + COLUMN_SUM + " real," + COLUMN_ADD_DATA + " text)";
         db.execSQL(command_one);
 
-        String command_two = "create table " + TABLE_CATEGORY + "(" + COLUMN_CATEGORY_T_C + " text primary key," + COLUMN_EXPENSE + " integer)";
+        String command_two = "create table " + TABLE_CATEGORY + "(" + COLUMN_CATEGORY_T_C + " text," + COLUMN_EXPENSE + " integer)";
         db.execSQL(command_two);
     }
 
