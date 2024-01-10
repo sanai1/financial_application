@@ -2,11 +2,11 @@ package com.example.financial_application;
 
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
@@ -20,9 +20,11 @@ public class MainActivity extends FragmentActivity implements CategoryDialog.Dia
     ActivityMainBinding binding_activity_main;
     AddCategoryBinding binding_add_category;
     DBHelper dbHelper;
-    boolean expense = true;
+    boolean expense_main = true;
     CategoryDialog dialog_category;
     String [] mas_test = {"one", "two", "three"};
+    String[] mas_name_category_expense = new String[50];
+    String[] mas_name_category_income = new String[50];
 
 
     @Override
@@ -43,51 +45,114 @@ public class MainActivity extends FragmentActivity implements CategoryDialog.Dia
         dialog_category = new CategoryDialog();
         dialog_category.setMyDialogListener(this);
 
-        Spinner spinner = findViewById(R.id.spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_test);
+        get_mas_expense();
+    }
+
+    void get_mas_expense() {
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+
+        String command_expense = "select category_t_c from category where expense=1";
+        String command_income = "select category_t_c from category where expense=0";
+        Cursor cursor_expense = database.rawQuery(command_expense, null);
+        Cursor cursor_income = database.rawQuery(command_income, null);
+
+        String[] mas_test_expense = new String[50];
+        String[] mas_test_income = new String[50];
+
+        int ind_name_category_in_cursor = 0;
+        while (cursor_expense.moveToNext())
+            mas_test_expense[ind_name_category_in_cursor++] = cursor_expense.getString(0);
+
+        ind_name_category_in_cursor = 0;
+        while (cursor_income.moveToNext())
+            mas_test_income[ind_name_category_in_cursor++] = cursor_income.getString(0);
+
+        int len_mas_expense = 0, len_mas_income = 0;
+        for (int i = 0; mas_test_expense[i] != null; i++)
+            len_mas_expense++;
+        for (int i = 0; mas_test_income[i] != null; i++)
+            len_mas_income++;
+        mas_name_category_expense = new String[len_mas_expense];
+        mas_name_category_income = new String[len_mas_income];
+        for (int i = 0; i < mas_name_category_expense.length; i++)
+            mas_name_category_expense[i] = mas_test_expense[i];
+        for (int i = 0; i < mas_name_category_income.length; i++)
+            mas_name_category_income[i] = mas_test_income[i];
+
+        mas_name_category_expense[0] = "expense"; // временная мера до заполнения БД реальными данными
+
+        ArrayAdapter<String> adapter;
+        if (binding_activity_main.buttonExpense.isActivated()) {
+            adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_income);
+        } else {
+            adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_expense);
+        }
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        spinner.setAdapter(adapter);
+        binding_activity_main.spinner.setAdapter(adapter);
     }
 
     public void income(View view) {
         binding_activity_main.buttonIncome.setEnabled(false);
         binding_activity_main.checkBoxBidPurchase.setEnabled(false);
         binding_activity_main.buttonExpense.setEnabled(true);
-        expense = true;
+        //binding_activity_main.checkBoxBidPurchase.setActivated(false);
+        expense_main = false;
+
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_income);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        binding_activity_main.spinner.setAdapter(adapter);
     }
 
     public void expense(View view) {
         binding_activity_main.buttonIncome.setEnabled(true);
         binding_activity_main.checkBoxBidPurchase.setEnabled(true);
         binding_activity_main.buttonExpense.setEnabled(false);
-        expense = false;
+        expense_main = true;
+
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_expense);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        binding_activity_main.spinner.setAdapter(adapter);
     }
 
     public void add_category_in_mainactivity(View view) {
-        System.out.println("no");
         dialog_category.show(getSupportFragmentManager(), "dialogCategory");
-        System.out.println("yes");
     }
     @Override
-    public void onDialogClickListener(String name_categoty, int expense) {
+    public void onDialogClickListener(String name_category, int expense) {
         binding_add_category = AddCategoryBinding.inflate(getLayoutInflater());
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(DBHelper.COLUMN_EXPENSE, expense);
-        contentValues.put(DBHelper.COLUMN_CATEGORY_T_C, name_categoty);
+        contentValues.put(DBHelper.COLUMN_CATEGORY_T_C, name_category);
 
         database.insert(DBHelper.TABLE_CATEGORY, null, contentValues);
-        System.out.println(true);
 
-        binding_add_category.editTextTextNameCategoryAddCategory.setText("Название категории");
-        binding_add_category.radioButtonExpense.setChecked(false);
-        binding_add_category.buttonAddAddCategory.setEnabled(false);
-
-        System.out.println(false);
+        if (expense == 1) {
+            String[] mas_test_expense = new String[mas_name_category_expense.length + 1];
+            for (int i = 0; i < mas_name_category_expense.length; i++)
+                mas_test_expense[i] = mas_name_category_expense[i];
+            mas_test_expense[mas_test_expense.length - 1] = name_category;
+            mas_name_category_expense = mas_test_expense;
+            if (expense_main) {
+                ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_expense);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+                binding_activity_main.spinner.setAdapter(adapter);
+            }
+        } else {
+            String[] mas_test_income = new String[mas_name_category_income.length + 1];
+            for (int i = 0; i < mas_name_category_income.length; i++)
+                mas_test_income[i] = mas_name_category_income[i];
+            mas_test_income[mas_test_income.length - 1] = name_category;
+            mas_name_category_income = mas_test_income;
+            if (!expense_main) {
+                ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_income);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+                binding_activity_main.spinner.setAdapter(adapter);
+            }
+        }
     }
-
-
 
     public void menu(View view) {
 
@@ -98,7 +163,7 @@ public class MainActivity extends FragmentActivity implements CategoryDialog.Dia
             SQLiteDatabase database = dbHelper.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
 
-            if (expense) {
+            if (expense_main) {
                 contentValues.put(DBHelper.COLUMN_EXPENDITURE, 1);
                 if (binding_activity_main.checkBoxBidPurchase.isChecked()) {
                     contentValues.put(DBHelper.COLUMN_BIG_PURCHASE, 1);
@@ -119,7 +184,5 @@ public class MainActivity extends FragmentActivity implements CategoryDialog.Dia
             System.out.println(true);
         }
     }
-
-
 
 }

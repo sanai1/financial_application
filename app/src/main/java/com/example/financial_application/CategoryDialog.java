@@ -63,7 +63,7 @@ public class CategoryDialog extends DialogFragment implements View.OnClickListen
                 //onDetach();
                 //onDestroyView();
                 //onPause();
-                //dismiss();
+                dismiss();
 
             }
         }
