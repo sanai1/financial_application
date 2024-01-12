@@ -94,9 +94,9 @@ public class MainActivity extends FragmentActivity implements CategoryDialog.Dia
 
     public void income(View view) {
         binding_activity_main.buttonIncome.setEnabled(false);
-        binding_activity_main.checkBoxBidPurchase.setEnabled(false);
         binding_activity_main.buttonExpense.setEnabled(true);
-        //binding_activity_main.checkBoxBidPurchase.setActivated(false);
+        binding_activity_main.checkBoxBidPurchase.setChecked(false);
+        binding_activity_main.checkBoxBidPurchase.setEnabled(false);
         expense_main = false;
 
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_income);
