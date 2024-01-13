@@ -5,18 +5,21 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentActivity;
 
 import com.example.financial_application.databinding.ActivityMainBinding;
 import com.example.financial_application.databinding.AddCategoryBinding;
 import com.google.android.material.navigation.NavigationView;
 
 
-public class MainActivity extends FragmentActivity implements CategoryDialog.DialogListenerAdd{
+public class MainActivity extends AppCompatActivity implements CategoryDialog.DialogListenerAdd{
     ActivityMainBinding binding_activity_main;
     AddCategoryBinding binding_add_category;
     DBHelper dbHelper;
@@ -25,6 +28,8 @@ public class MainActivity extends FragmentActivity implements CategoryDialog.Dia
     String [] mas_test = {"one", "two", "three"};
     String[] mas_name_category_expense = new String[50];
     String[] mas_name_category_income = new String[50];
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
 
 
     @Override
@@ -32,20 +37,33 @@ public class MainActivity extends FragmentActivity implements CategoryDialog.Dia
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout_id);
+        drawerLayout = findViewById(R.id.drawer_layout_id);
 
-        NavigationView navigationView = findViewById(R.id.navigator_view_id);
-
+        navigationView = findViewById(R.id.navigator_view_id);
 
         binding_activity_main = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding_activity_main.getRoot());
+        binding_activity_main.navigatorViewId.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                Toast.makeText(MainActivity.this, "TEST", Toast.LENGTH_SHORT).show();
+                if (id == R.id.goal){
+                    Toast.makeText(MainActivity.this, "sdfsdfsdf", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        });
 
+
+//
         dbHelper = new DBHelper(this);
 
         dialog_category = new CategoryDialog();
         dialog_category.setMyDialogListener(this);
 
-        get_mas_expense();
+        // TODO: найти и исправить ошибку
+//        get_mas_expense();
     }
 
     void get_mas_expense() {
