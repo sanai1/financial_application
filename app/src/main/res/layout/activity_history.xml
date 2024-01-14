@@ -4,31 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/goal_drawer_layout"
-    tools:context=".GoalActivity">
+    android:id="@+id/drawer_layout_id"
+    tools:context=".HistoryActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" >
 
-        <include layout="@layout/main" />
+        <include
+            android:id="@+id/include"
+            layout="@layout/main" />
 
         <Button
-            android:id="@+id/goal_button_id"
+            android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClickButton"
-            android:text="ЦЕЛЬ"
+            android:onClick="onClickHistory"
+            android:text="История"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/include"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/goalNavigationMenu"
+        android:id="@+id/historyNavigationMenu"
         android:layout_gravity="start"
         app:headerLayout="@layout/menu_title"
         app:menu="@menu/navigation_menu"/>

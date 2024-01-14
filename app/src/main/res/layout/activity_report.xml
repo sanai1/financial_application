@@ -4,33 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/goal_drawer_layout"
-    tools:context=".GoalActivity">
+    android:id="@+id/drawer_layout_id"
+    tools:context=".ReportActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/main" />
+        <include
+            android:id="@+id/include2"
+            layout="@layout/main"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="-80dp" />
 
         <Button
-            android:id="@+id/goal_button_id"
+            android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClickButton"
-            android:text="ЦЕЛЬ"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:onClick="onClickReport"
+            android:text="Отчет"
+            app:layout_constraintBottom_toBottomOf="@+id/include2"
+            app:layout_constraintEnd_toEndOf="@+id/include2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/include2" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/goalNavigationMenu"
+        android:id="@+id/reportNavigationMenu"
         android:layout_gravity="start"
         app:headerLayout="@layout/menu_title"
-        app:menu="@menu/navigation_menu"/>
+        app:menu="@menu/navigation_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

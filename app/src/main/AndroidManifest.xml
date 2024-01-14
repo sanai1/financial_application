@@ -21,6 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.example.financial_application.GoalActivity" />
+        <activity android:name="com.example.financial_application.HistoryActivity" />
+        <activity android:name="com.example.financial_application.ReportActivity" />
+        <activity android:name="com.example.financial_application.CategoryActivity" />
     </application>
 
 </manifest>

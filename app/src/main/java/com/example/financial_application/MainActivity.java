@@ -2,6 +2,7 @@ package com.example.financial_application;
 
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -12,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.financial_application.databinding.ActivityMainBinding;
 import com.example.financial_application.databinding.AddCategoryBinding;
@@ -22,24 +22,16 @@ import com.google.android.material.navigation.NavigationView;
 public class MainActivity extends AppCompatActivity implements CategoryDialog.DialogListenerAdd{
     ActivityMainBinding binding_activity_main;
     AddCategoryBinding binding_add_category;
-    DBHelper dbHelper;
-    boolean expense_main = true;
-    CategoryDialog dialog_category;
-    String [] mas_test = {"one", "two", "three"};
-    String[] mas_name_category_expense = new String[50];
-    String[] mas_name_category_income = new String[50];
-    DrawerLayout drawerLayout;
-    NavigationView navigationView;
-
+    protected DBHelper dbHelper;
+    protected boolean expense_main = true;
+    protected CategoryDialog dialog_category;
+    protected String[] mas_name_category_expense = new String[50];
+    protected String[] mas_name_category_income = new String[50];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        drawerLayout = findViewById(R.id.drawer_layout_id);
-
-        navigationView = findViewById(R.id.navigator_view_id);
 
         binding_activity_main = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding_activity_main.getRoot());
@@ -47,23 +39,41 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                Toast.makeText(MainActivity.this, "TEST", Toast.LENGTH_SHORT).show();
-                if (id == R.id.goal){
-                    Toast.makeText(MainActivity.this, "sdfsdfsdf", Toast.LENGTH_SHORT).show();
+                if (id == R.id.nav_main) {
+                    binding_activity_main.drawerLayoutId.close();
+                    Toast.makeText(MainActivity.this, "Главная", Toast.LENGTH_SHORT).show();
+                } else if (id == R.id.nav_goal){
+                    binding_activity_main.drawerLayoutId.close();
+                    Toast.makeText(MainActivity.this, "Цель", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, GoalActivity.class);
+                    startActivity(intent);
+                } else if (id == R.id.nav_history) {
+                    binding_activity_main.drawerLayoutId.close();
+                    Toast.makeText(MainActivity.this, "История", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+                    startActivity(intent);
+                } else if (id == R.id.nav_report) {
+                    binding_activity_main.drawerLayoutId.close();
+                    Toast.makeText(MainActivity.this, "Отчет", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, ReportActivity.class);
+                    startActivity(intent);
+                } else if (id == R.id.nav_categories) {
+                    binding_activity_main.drawerLayoutId.close();
+                    Toast.makeText(MainActivity.this, "Категории", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
+                    startActivity(intent);
                 }
                 return true;
             }
         });
 
-
-//
         dbHelper = new DBHelper(this);
 
         dialog_category = new CategoryDialog();
         dialog_category.setMyDialogListener(this);
 
         // TODO: найти и исправить ошибку
-//        get_mas_expense();
+        get_mas_expense();
     }
 
     void get_mas_expense() {
@@ -97,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         for (int i = 0; i < mas_name_category_income.length; i++)
             mas_name_category_income[i] = mas_test_income[i];
 
-        mas_name_category_expense[0] = "expense"; // временная мера до заполнения БД реальными данными
+        //mas_name_category_expense[0] = "expense"; // временная мера до заполнения БД реальными данными
 
         ArrayAdapter<String> adapter;
         if (binding_activity_main.buttonExpense.isActivated()) {

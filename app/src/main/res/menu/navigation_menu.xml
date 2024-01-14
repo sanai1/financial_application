@@ -2,16 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/goal"
+        android:id="@+id/nav_main"
+        android:title="ГЛАВНАЯ" />
+    <item
+        android:id="@+id/nav_goal"
         android:title="ЦЕЛЬ" />
     <item
-        android:id="@+id/history"
+        android:id="@+id/nav_history"
         android:title="ИСТОРИЯ" />
     <item
-        android:id="@+id/report"
+        android:id="@+id/nav_report"
         android:title="ОТЧЕТ" />
     <item
-        android:id="@+id/categories"
+        android:id="@+id/nav_categories"
         android:title="КАТЕГОРИИ" />
 
 </menu>
