@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 
 import com.example.financial_application.databinding.ActivityMainBinding;
 import com.example.financial_application.databinding.AddCategoryBinding;
@@ -130,6 +131,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_income);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         binding_activity_main.spinner.setAdapter(adapter);
+
+        Toast.makeText(this, "Доход", Toast.LENGTH_SHORT).show();
     }
 
     public void expense(View view) {
@@ -141,6 +144,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_expense);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         binding_activity_main.spinner.setAdapter(adapter);
+
+        Toast.makeText(this, "Расход", Toast.LENGTH_SHORT).show();
     }
 
     public void add_category_in_mainactivity(View view) {
@@ -180,10 +185,12 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
                 binding_activity_main.spinner.setAdapter(adapter);
             }
         }
+        Toast.makeText(this, "Категория добавлена", Toast.LENGTH_SHORT).show();
     }
 
     public void menu(View view) {
-
+        binding_activity_main.drawerLayoutId.openDrawer(GravityCompat.START);
+        Toast.makeText(this, "Меню", Toast.LENGTH_SHORT).show();
     }
 
     public void save_expense(View view) {
@@ -208,8 +215,13 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
             contentValues.put(DBHelper.COLUMN_ADD_DATA, add_data);
 
             database.insert(DBHelper.TABLE_HISTORY, null, contentValues);
+
+            binding_activity_main.editTextNumberSum.setText("");
+            binding_activity_main.editTextDate.setText("");
+            binding_activity_main.checkBoxBidPurchase.setChecked(false);
+            Toast.makeText(this, "Запись сохранена", Toast.LENGTH_SHORT).show();
         } else {
-            System.out.println(true);
+            Toast.makeText(this, "Проверьте введеные данные", Toast.LENGTH_SHORT).show();
         }
     }
 
