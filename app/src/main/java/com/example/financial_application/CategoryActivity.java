@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 
 import com.example.financial_application.databinding.ActivityCategoryBinding;
 import com.google.android.material.navigation.NavigationView;
@@ -58,5 +59,10 @@ public class CategoryActivity extends AppCompatActivity {
 
     public void onClickCategory(View view) {
         System.out.println("Категории");
+    }
+
+    public void menu(View view) {
+        binding_activity_category.drawerLayoutId.openDrawer(GravityCompat.START);
+        Toast.makeText(this, "Меню", Toast.LENGTH_SHORT).show();
     }
 }

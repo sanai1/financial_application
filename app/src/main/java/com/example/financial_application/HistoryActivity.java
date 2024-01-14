@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 
 import com.example.financial_application.databinding.ActivityHistoryBinding;
 import com.google.android.material.navigation.NavigationView;
@@ -57,5 +58,10 @@ public class HistoryActivity extends AppCompatActivity {
 
     public void onClickHistory(View view) {
         System.out.println("История");
+    }
+
+    public void menu(View view) {
+        binding_activity_history.drawerLayoutId.openDrawer(GravityCompat.START);
+        Toast.makeText(this, "Меню", Toast.LENGTH_SHORT).show();
     }
 }

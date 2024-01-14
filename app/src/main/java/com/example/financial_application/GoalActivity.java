@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 
 import com.example.financial_application.databinding.ActivityGoalBinding;
 import com.google.android.material.navigation.NavigationView;
@@ -58,5 +59,10 @@ public class GoalActivity extends AppCompatActivity {
     }
     public void onClickButton(View view) {
         System.out.println("Цель");
+    }
+
+    public void menu(View view) {
+        binding_activity_goal.goalDrawerLayout.openDrawer(GravityCompat.START);
+        Toast.makeText(this, "Меню", Toast.LENGTH_SHORT).show();
     }
 }
