@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         get_mas_expense();
     }
 
-    void get_mas_expense() {
+    private void get_mas_expense() {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
         String command_expense = "select category_t_c from category where expense=1";
