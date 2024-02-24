@@ -199,7 +199,6 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         dialog_update_data.show(getSupportFragmentManager(), "dialogData");
     }
     public void onDialogDataClick(String text) {
-        System.out.println(text);
         binding_activity_main.textViewDate.setText(text);
     }
 

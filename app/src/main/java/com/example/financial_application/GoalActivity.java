@@ -59,6 +59,7 @@ public class GoalActivity extends AppCompatActivity {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                // TODO: выполнение кода в данном потоке не проверено (протестировать)
                 if (!start_activity) {
                     Calendar calendar = new GregorianCalendar();
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM");
@@ -96,7 +97,7 @@ public class GoalActivity extends AppCompatActivity {
                                 " substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7) as my " +
                                 " from " + DBHelper.TABLE_HISTORY + " h " +
                                 " group by substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7) " +
-                                " ) t where my = '" + String.valueOf(month) + "'";
+                                " ) t where my = '" + month + "'";
                         Cursor cursor_delta = database.rawQuery(command_delta, null);
                         cursor_delta.moveToNext();
 
@@ -141,7 +142,12 @@ public class GoalActivity extends AppCompatActivity {
                     binding_activity_goal.textViewDate.setText("Дата достижения цели: " + text_add_date);
                     String text_ps = "около " + cursor.getInt(1) + " месяцев (по рассчету на " + cursor.getString(0) + ")";
                     binding_activity_goal.textViewPS.setText(text_ps);
+                    String percent = cursor.getString(3);
+                    if (percent != null) {
+                        binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: " + percent + "%");
+                    }
                 }
+                cursor.close();
             }
         };
         Thread thread = new Thread(runnable);
@@ -162,11 +168,9 @@ public class GoalActivity extends AppCompatActivity {
                 ") t order by my";
         Cursor cursor = database.rawQuery(command, null);
 
-        long summa = 0;
         ArrayList<Integer> mas = new ArrayList<>();
         while (cursor.moveToNext()) {
             mas.add(cursor.getInt(4));
-            summa += cursor.getLong(4);
         }
         cursor.close();
 
@@ -204,11 +208,23 @@ public class GoalActivity extends AppCompatActivity {
             }
             cnt_month++;
             sum_capital += k*cnt_month + b;
-            System.out.println(sum_capital + " ||||| " + cnt_month);
             if (sum_capital >= goal_sum) {
                 break;
             }
         }
+        double percent_double = (capital_now / goal_sum) * 100.0;
+        String percent = String.valueOf(percent_double);
+
+        try {
+            if (percent_double >= 100) {
+                percent = percent.substring(0, 5);
+            } else {
+                percent = percent.substring(0, 4);
+            }
+        } catch (Exception ex) {
+            percent = percent;
+        }
+
         Calendar calendar = new GregorianCalendar();
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM");
         ContentValues contentValues = new ContentValues();
@@ -226,21 +242,25 @@ public class GoalActivity extends AppCompatActivity {
             String time = String.valueOf(time_finish).substring(0, 7);
             binding_activity_goal.textViewPS.setText("около " + String.valueOf(cnt_month) + " месяцев");
             binding_activity_goal.textViewDate.setText("Дата достижения цели: " + String.valueOf(time));
+            binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: " + percent + "%");
             contentValues.put(DBHelper.COLUMN_DATE_FINISH, time);
 
         } else {
             binding_activity_goal.textViewPS.setText("");
             binding_activity_goal.textViewDate.setText(text_goal);
+            binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: менее 0.1%");
             contentValues.put(DBHelper.COLUMN_DATE_FINISH, "более чем через 100 лет");
         }
 
         contentValues.put(DBHelper.COLUMN_DATE_CALCULATION, time_now);
         contentValues.put(DBHelper.COLUMN_TEMP_GOAL, cnt_month);
 
+        contentValues.put(DBHelper.COLUMN_PERCENT_DATE, percent);
         database.insert(DBHelper.TABLE_CALCULATION_INFO, null, contentValues);
+    }
 
-        System.out.println(k);
-        System.out.println(b);
+    public void name_goal(View view) {
+        // TODO: реализовать возможность изменения цели
     }
 
     private void print() {
