@@ -20,7 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_GOAL = "goal";
     public static final String COLUMN_NAME = "name_goal", COLUMN_SUMMA_GOAL = "summa", COLUMN_START_CAPITAL = "start_capital",
-            COLUMN_PERCENT = "percent", COLUMN_INFLATION = "inflation";
+            COLUMN_PERCENT = "percent", COLUMN_INFLATION = "inflation", COLUMN_GOAL_UID = "goal_uid";
 
 
     public static final String TABLE_CAPITAL = "capital";
@@ -58,7 +58,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 COLUMN_SUMMA_GOAL + " integer," +
                 COLUMN_START_CAPITAL + " integer," +
                 COLUMN_PERCENT + " integer," +
-                COLUMN_INFLATION + " integer)";
+                COLUMN_INFLATION + " integer," +
+                COLUMN_GOAL_UID + " integer)";
         db.execSQL(command_three);
 
         String command_four = "create table " + TABLE_CAPITAL + "(" +

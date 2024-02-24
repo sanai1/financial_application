@@ -29,7 +29,6 @@ public class GoalActivity extends AppCompatActivity {
     protected SQLiteDatabase database;
     private boolean start_activity = true;
     private boolean first_version_goal = true;
-    private String new_name_goal, new_summa, new_start_capital, new_percent, new_inflation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -259,7 +258,7 @@ public class GoalActivity extends AppCompatActivity {
     }
 
     public void name_goal(View view) {
-        // TODO: реализовать возможность изменения цели
+        // TODO: при изменении цели (втч сумм) должен происходить перерасчет капитала
         create_menu_start();
 
         binding_activity_goal_start.textViewCreateGoal.setText("Отредактируйте свою цель");
@@ -268,18 +267,18 @@ public class GoalActivity extends AppCompatActivity {
         Cursor cursor = database.rawQuery(command_info_goal, null);
         cursor.moveToNext();
 
-        new_name_goal = cursor.getString(0);
-        new_summa = cursor.getString(1);
-        new_start_capital = cursor.getString(2);
-        new_percent = cursor.getString(3);
-        new_inflation = cursor.getString(4);
+        String name_goal = cursor.getString(0);
+        String summa = cursor.getString(1);
+        String start_capital = cursor.getString(2);
+        String percent = cursor.getString(3);
+        String inflation = cursor.getString(4);
         cursor.close();
 
-        binding_activity_goal_start.editTextTextName.setText(new_name_goal);
-        binding_activity_goal_start.editTextNumberSum.setText(new_summa);
-        binding_activity_goal_start.editTextNumberStartSum.setText(new_start_capital);
-        binding_activity_goal_start.editTextNumberPercent.setText(new_percent);
-        binding_activity_goal_start.editTextNumberInflation.setText(new_inflation);
+        binding_activity_goal_start.editTextTextName.setText(name_goal);
+        binding_activity_goal_start.editTextNumberSum.setText(summa);
+        binding_activity_goal_start.editTextNumberStartSum.setText(start_capital);
+        binding_activity_goal_start.editTextNumberPercent.setText(percent);
+        binding_activity_goal_start.editTextNumberInflation.setText(inflation);
 
         first_version_goal = false;
     }
@@ -329,11 +328,10 @@ public class GoalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_goal);
         setContentView(binding_activity_goal.getRoot());
 
-        String command_info = "select * from goal";
+        String command_info = "select * from " + DBHelper.TABLE_GOAL;
         Cursor cursor_info = database.rawQuery(command_info, null);
 
         cursor_info.moveToNext();
-
         binding_activity_goal.textViewNameGoal.setText("Название цели: " + cursor_info.getString(0));
         binding_activity_goal.textViewSumGoal.setText("Сумма цели : " + cursor_info.getInt(1));
         cursor_info.close();
@@ -372,21 +370,33 @@ public class GoalActivity extends AppCompatActivity {
     }
 
     private void update_goal() {
-        String command_update = "update " + DBHelper.TABLE_GOAL +
-                " set " + DBHelper.COLUMN_NAME + " = " + new_name_goal + " , " +
-                DBHelper.COLUMN_SUMMA_GOAL + " = " + new_summa + " , " +
-                DBHelper.COLUMN_START_CAPITAL + " = " + new_start_capital + " , " +
-                DBHelper.COLUMN_PERCENT + " = " + new_percent + " , " +
-                DBHelper.COLUMN_INFLATION + " = " + new_inflation + " ;";
-        database.execSQL(command_update);
+        ContentValues contentValues = new ContentValues();
+        String new_name_goal, new_summa, new_start_capital, new_percent, new_inflation;
+
+        new_name_goal = binding_activity_goal_start.editTextTextName.getText().toString();
+        new_summa = binding_activity_goal_start.editTextNumberSum.getText().toString();
+        new_start_capital = binding_activity_goal_start.editTextNumberStartSum.getText().toString();
+        new_percent = binding_activity_goal_start.editTextNumberPercent.getText().toString();
+        new_inflation = binding_activity_goal_start.editTextNumberInflation.getText().toString();
+
+        contentValues.put(DBHelper.COLUMN_NAME, new_name_goal);
+        contentValues.put(DBHelper.COLUMN_SUMMA_GOAL, new_summa);
+        contentValues.put(DBHelper.COLUMN_START_CAPITAL, new_start_capital);
+        contentValues.put(DBHelper.COLUMN_PERCENT, new_percent);
+        contentValues.put(DBHelper.COLUMN_INFLATION, new_inflation);
+
+        database.update(DBHelper.TABLE_GOAL, contentValues, DBHelper.COLUMN_GOAL_UID + " = 1", null);
 
         Toast.makeText(this, "Цель изменена", Toast.LENGTH_SHORT).show();
-        create_goal();
     }
 
     public void save_goal(View view) {
         if (!first_version_goal) {
             update_goal();
+            create_goal();
+            binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: не рассчитан");
+            binding_activity_goal.textViewDate.setText("Дата достижения цели: не рассчитана");
+            binding_activity_goal.textViewPS.setText("");
             return;
         }
         first_version_goal = false;
@@ -430,6 +440,7 @@ public class GoalActivity extends AppCompatActivity {
 
             contentValues_capital.put(DBHelper.COLUMN_MONTH, String.valueOf(date_now));
             contentValues_capital.put(DBHelper.COLUMN_CAPITAL_SUM, number_start_sum);
+            contentValues.put(DBHelper.COLUMN_GOAL_UID, 1);
 
             database.insert(DBHelper.TABLE_GOAL, null, contentValues);
             database.insert(DBHelper.TABLE_CAPITAL, null, contentValues_capital);
