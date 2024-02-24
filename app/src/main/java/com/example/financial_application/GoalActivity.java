@@ -27,7 +27,9 @@ public class GoalActivity extends AppCompatActivity {
     protected ActivityGoalBinding binding_activity_goal;
     protected DBHelper dbHelper;
     protected SQLiteDatabase database;
-    protected boolean start_activity = true;
+    private boolean start_activity = true;
+    private boolean first_version_goal = true;
+    private String new_name_goal, new_summa, new_start_capital, new_percent, new_inflation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -43,9 +45,6 @@ public class GoalActivity extends AppCompatActivity {
         cursor.close();
 
         if (start_activity) {
-            setContentView(R.layout.activity_goal_start);
-            setContentView(binding_activity_goal_start.getRoot());
-
             create_menu_start();
         } else {
             create_goal();
@@ -261,6 +260,28 @@ public class GoalActivity extends AppCompatActivity {
 
     public void name_goal(View view) {
         // TODO: реализовать возможность изменения цели
+        create_menu_start();
+
+        binding_activity_goal_start.textViewCreateGoal.setText("Отредактируйте свою цель");
+        binding_activity_goal_start.textViewCreateGoal.setTextSize(25);
+        String command_info_goal = "select * from " + DBHelper.TABLE_GOAL;
+        Cursor cursor = database.rawQuery(command_info_goal, null);
+        cursor.moveToNext();
+
+        new_name_goal = cursor.getString(0);
+        new_summa = cursor.getString(1);
+        new_start_capital = cursor.getString(2);
+        new_percent = cursor.getString(3);
+        new_inflation = cursor.getString(4);
+        cursor.close();
+
+        binding_activity_goal_start.editTextTextName.setText(new_name_goal);
+        binding_activity_goal_start.editTextNumberSum.setText(new_summa);
+        binding_activity_goal_start.editTextNumberStartSum.setText(new_start_capital);
+        binding_activity_goal_start.editTextNumberPercent.setText(new_percent);
+        binding_activity_goal_start.editTextNumberInflation.setText(new_inflation);
+
+        first_version_goal = false;
     }
 
     private void print() {
@@ -268,6 +289,9 @@ public class GoalActivity extends AppCompatActivity {
     }
 
     private void create_menu_start() {
+        setContentView(R.layout.activity_goal_start);
+        setContentView(binding_activity_goal_start.getRoot());
+
         binding_activity_goal_start.goalNavigationMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -347,7 +371,25 @@ public class GoalActivity extends AppCompatActivity {
         });
     }
 
+    private void update_goal() {
+        String command_update = "update " + DBHelper.TABLE_GOAL +
+                " set " + DBHelper.COLUMN_NAME + " = " + new_name_goal + " , " +
+                DBHelper.COLUMN_SUMMA_GOAL + " = " + new_summa + " , " +
+                DBHelper.COLUMN_START_CAPITAL + " = " + new_start_capital + " , " +
+                DBHelper.COLUMN_PERCENT + " = " + new_percent + " , " +
+                DBHelper.COLUMN_INFLATION + " = " + new_inflation + " ;";
+        database.execSQL(command_update);
+
+        Toast.makeText(this, "Цель изменена", Toast.LENGTH_SHORT).show();
+        create_goal();
+    }
+
     public void save_goal(View view) {
+        if (!first_version_goal) {
+            update_goal();
+            return;
+        }
+        first_version_goal = false;
         boolean is_exception = false;
         Integer number_sum = null, number_start_sum = null, number_percent = null, number_inflation;
         try {
