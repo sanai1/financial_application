@@ -20,12 +20,14 @@ import com.example.financial_application.databinding.AddCategoryBinding;
 import com.google.android.material.navigation.NavigationView;
 
 
-public class MainActivity extends AppCompatActivity implements CategoryDialog.DialogListenerAdd{
+public class MainActivity extends AppCompatActivity implements CategoryDialog.DialogListenerAdd, UpdateDataDialog.DialogListenerData{
     ActivityMainBinding binding_activity_main;
     AddCategoryBinding binding_add_category;
     protected DBHelper dbHelper;
+    protected SQLiteDatabase database;
     protected boolean expense_main = true;
     protected CategoryDialog dialog_category;
+    protected UpdateDataDialog dialog_update_data;
     protected String[] mas_name_category_expense = new String[50];
     protected String[] mas_name_category_income = new String[50];
 
@@ -73,12 +75,15 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         dialog_category = new CategoryDialog();
         dialog_category.setMyDialogListener(this);
 
-        // TODO: найти и исправить ошибку
+        dialog_update_data = new UpdateDataDialog();
+        dialog_update_data.setMyDialogDataListener(this);
+
+
         get_mas_expense();
     }
 
     private void get_mas_expense() {
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        database = dbHelper.getWritableDatabase();
 
         String command_expense = "select category_t_c from category where expense=1";
         String command_income = "select category_t_c from category where expense=0";
@@ -91,10 +96,12 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         int ind_name_category_in_cursor = 0;
         while (cursor_expense.moveToNext())
             mas_test_expense[ind_name_category_in_cursor++] = cursor_expense.getString(0);
+        cursor_expense.close();
 
         ind_name_category_in_cursor = 0;
         while (cursor_income.moveToNext())
             mas_test_income[ind_name_category_in_cursor++] = cursor_income.getString(0);
+        cursor_income.close();
 
         int len_mas_expense = 0, len_mas_income = 0;
         for (int i = 0; mas_test_expense[i] != null; i++)
@@ -154,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
     @Override
     public void onDialogClickListener(String name_category, int expense) {
         binding_add_category = AddCategoryBinding.inflate(getLayoutInflater());
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        database = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(DBHelper.COLUMN_EXPENSE, expense);
@@ -188,36 +195,44 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         Toast.makeText(this, "Категория добавлена", Toast.LENGTH_SHORT).show();
     }
 
+    public void update_data(View view) {
+        dialog_update_data.show(getSupportFragmentManager(), "dialogData");
+    }
+    public void onDialogDataClick(String text) {
+        System.out.println(text);
+        binding_activity_main.textViewDate.setText(text);
+    }
+
     public void menu(View view) {
         binding_activity_main.drawerLayoutId.openDrawer(GravityCompat.START);
         Toast.makeText(this, "Меню", Toast.LENGTH_SHORT).show();
     }
 
     public void save_expense(View view) {
-        if (binding_activity_main.editTextNumberSum.getText().length() != 0 && binding_activity_main.editTextDate.getText().length() != 0) {
-            SQLiteDatabase database = dbHelper.getWritableDatabase();
+        if (binding_activity_main.editTextNumberSum.getText().length() != 0) { //&& binding_activity_main.editTextDate.getText().length() != 0) {
+            database = dbHelper.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
 
             if (expense_main) {
-                contentValues.put(DBHelper.COLUMN_EXPENDITURE, 1);
+                contentValues.put(DBHelper.COLUMN_IS_EXPENSE, 1);
                 if (binding_activity_main.checkBoxBidPurchase.isChecked()) {
-                    contentValues.put(DBHelper.COLUMN_BIG_PURCHASE, 1);
+                    contentValues.put(DBHelper.COLUMN_IS_BIG_PURCHASE, 1);
                 } else {
-                    contentValues.put(DBHelper.COLUMN_BIG_PURCHASE, 0);
+                    contentValues.put(DBHelper.COLUMN_IS_BIG_PURCHASE, 0);
                 }
             } else {
-                contentValues.put(DBHelper.COLUMN_EXPENDITURE, 0);
+                contentValues.put(DBHelper.COLUMN_IS_EXPENSE, 0);
             }
 
             double sum = Double.parseDouble(binding_activity_main.editTextNumberSum.getText().toString());
-            String add_data = binding_activity_main.editTextDate.getText().toString();
-            contentValues.put(DBHelper.COLUMN_SUM, sum);
-            contentValues.put(DBHelper.COLUMN_ADD_DATA, add_data);
+            //String add_data = binding_activity_main.editTextDate.getText().toString();
+            contentValues.put(DBHelper.COLUMN_SUMMA, sum);
+            //contentValues.put(DBHelper.COLUMN_ADD_DATA, add_data);
 
             database.insert(DBHelper.TABLE_HISTORY, null, contentValues);
 
             binding_activity_main.editTextNumberSum.setText("");
-            binding_activity_main.editTextDate.setText("");
+            //binding_activity_main.editTextDate.setText("");
             binding_activity_main.checkBoxBidPurchase.setChecked(false);
             Toast.makeText(this, "Запись сохранена", Toast.LENGTH_SHORT).show();
         } else {
