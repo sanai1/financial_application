@@ -24,7 +24,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public static final String TABLE_CAPITAL = "capital";
-    public static final String COLUMN_MONTH = "month", COLUMN_CAPITAL_SUM = "capital_sum";
+    public static final String COLUMN_UID_CAPITAL = "uid_capital", COLUMN_MONTH = "month", COLUMN_CAPITAL_SUM = "capital_sum";
 
 
     public static final String TABLE_CALCULATION_INFO = "calculation_info";
@@ -64,7 +64,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String command_four = "create table " + TABLE_CAPITAL + "(" +
                 COLUMN_MONTH + " text," +
-                COLUMN_CAPITAL_SUM + " real)";
+                COLUMN_CAPITAL_SUM + " real, " +
+                COLUMN_UID_CAPITAL + " integer)";
         db.execSQL(command_four);
 
         String command_five = "create table " + TABLE_CALCULATION_INFO + "(" +

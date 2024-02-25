@@ -38,7 +38,7 @@ public class GoalActivity extends AppCompatActivity {
 
         dbHelper = new DBHelper(this);
         database = dbHelper.getWritableDatabase();
-        String command_test = "select " + DBHelper.COLUMN_NAME + " from " + DBHelper.TABLE_GOAL;
+        String command_test = "select * from " + DBHelper.TABLE_GOAL;
         Cursor cursor = database.rawQuery(command_test, null);
         start_activity = !cursor.moveToNext();
         cursor.close();
@@ -201,7 +201,7 @@ public class GoalActivity extends AppCompatActivity {
 
         while (cnt_month < 1200) {
             if (cnt_month == 0 && sum_capital >= goal_sum){
-                text_goal = "Ваша цель уже достигнута. Поздравляем!!!";
+                text_goal = "Ваша цель уже достигнута!!!";
                 break;
             }
             cnt_month++;
@@ -221,6 +221,10 @@ public class GoalActivity extends AppCompatActivity {
             }
         } catch (Exception ex) {
             percent = percent;
+        } finally {
+            if (Double.valueOf(percent) < 0.01) {
+                percent = "менее 0.01";
+            }
         }
 
         Calendar calendar = new GregorianCalendar();
@@ -229,7 +233,9 @@ public class GoalActivity extends AppCompatActivity {
         double time_now = Double.valueOf(format.format(calendar.getTime())), time_finish;
 
         if (cnt_month > 0 && cnt_month < 1200) {
-            time_finish = time_now + 0.01*cnt_month;
+            long year = cnt_month / 12;
+            time_finish = time_now + year;
+            time_finish += 0.01 * (cnt_month % 12);
             if (time_finish % 1 > 0.12) {
                 double delta_dr = time_finish % 1;
                 long delta_cheloe = (long) time_finish;
@@ -238,17 +244,20 @@ public class GoalActivity extends AppCompatActivity {
                 time_finish = num + (number % 1)*0.12;
             }
             String time = String.valueOf(time_finish).substring(0, 7);
-            binding_activity_goal.textViewPS.setText("около " + String.valueOf(cnt_month) + " месяцев");
+            binding_activity_goal.textViewPS.setText("около " + String.valueOf(cnt_month) + " месяцев (по рассчету на " + time_now + ")");
             binding_activity_goal.textViewDate.setText("Дата достижения цели: " + String.valueOf(time));
-            binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: " + percent + "%");
+            //binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: " + percent + "%");
             contentValues.put(DBHelper.COLUMN_DATE_FINISH, time);
 
-        } else {
+        } else if (cnt_month == 1200){
             binding_activity_goal.textViewPS.setText("");
             binding_activity_goal.textViewDate.setText(text_goal);
-            binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: менее 0.1%");
             contentValues.put(DBHelper.COLUMN_DATE_FINISH, "более чем через 100 лет");
+        } else { // cnt_month = 0
+            binding_activity_goal.textViewDate.setText(text_goal);
+            contentValues.put(DBHelper.COLUMN_DATE_FINISH, "уже достигнута");
         }
+        binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: " + percent + "%");
 
         contentValues.put(DBHelper.COLUMN_DATE_CALCULATION, time_now);
         contentValues.put(DBHelper.COLUMN_TEMP_GOAL, cnt_month);
@@ -258,7 +267,6 @@ public class GoalActivity extends AppCompatActivity {
     }
 
     public void name_goal(View view) {
-        // TODO: при изменении цели (втч сумм) должен происходить перерасчет капитала
         create_menu_start();
 
         binding_activity_goal_start.textViewCreateGoal.setText("Отредактируйте свою цель");
@@ -334,6 +342,9 @@ public class GoalActivity extends AppCompatActivity {
         cursor_info.moveToNext();
         binding_activity_goal.textViewNameGoal.setText("Название цели: " + cursor_info.getString(0));
         binding_activity_goal.textViewSumGoal.setText("Сумма цели : " + cursor_info.getInt(1));
+        binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: не рассчитан");
+        binding_activity_goal.textViewDate.setText("Дата достижения цели: не рассчитана");
+        binding_activity_goal.textViewPS.setText("");
         cursor_info.close();
 
         binding_activity_goal.goalNavigationMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -371,6 +382,7 @@ public class GoalActivity extends AppCompatActivity {
 
     private void update_goal() {
         ContentValues contentValues = new ContentValues();
+        ContentValues contentValues_capital = new ContentValues();
         String new_name_goal, new_summa, new_start_capital, new_percent, new_inflation;
 
         new_name_goal = binding_activity_goal_start.editTextTextName.getText().toString();
@@ -385,7 +397,10 @@ public class GoalActivity extends AppCompatActivity {
         contentValues.put(DBHelper.COLUMN_PERCENT, new_percent);
         contentValues.put(DBHelper.COLUMN_INFLATION, new_inflation);
 
+        contentValues_capital.put(DBHelper.COLUMN_CAPITAL_SUM, new_start_capital);
+
         database.update(DBHelper.TABLE_GOAL, contentValues, DBHelper.COLUMN_GOAL_UID + " = 1", null);
+        database.update(DBHelper.TABLE_CAPITAL, contentValues_capital, DBHelper.COLUMN_UID_CAPITAL + " = 1", null);
 
         Toast.makeText(this, "Цель изменена", Toast.LENGTH_SHORT).show();
     }
@@ -437,10 +452,11 @@ public class GoalActivity extends AppCompatActivity {
             contentValues.put(DBHelper.COLUMN_START_CAPITAL, number_start_sum);
             contentValues.put(DBHelper.COLUMN_PERCENT, number_percent);
             contentValues.put(DBHelper.COLUMN_INFLATION, number_inflation);
+            contentValues.put(DBHelper.COLUMN_GOAL_UID, 1);
 
             contentValues_capital.put(DBHelper.COLUMN_MONTH, String.valueOf(date_now));
             contentValues_capital.put(DBHelper.COLUMN_CAPITAL_SUM, number_start_sum);
-            contentValues.put(DBHelper.COLUMN_GOAL_UID, 1);
+            contentValues_capital.put(DBHelper.COLUMN_UID_CAPITAL, 1);
 
             database.insert(DBHelper.TABLE_GOAL, null, contentValues);
             database.insert(DBHelper.TABLE_CAPITAL, null, contentValues_capital);
