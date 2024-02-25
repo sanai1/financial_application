@@ -19,6 +19,10 @@ import com.example.financial_application.databinding.ActivityMainBinding;
 import com.example.financial_application.databinding.AddCategoryBinding;
 import com.google.android.material.navigation.NavigationView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 
 public class MainActivity extends AppCompatActivity implements CategoryDialog.DialogListenerAdd, UpdateDataDialog.DialogListenerData{
     ActivityMainBinding binding_activity_main;
@@ -208,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
     }
 
     public void save_expense(View view) {
-        if (binding_activity_main.editTextNumberSum.getText().length() != 0) { //&& binding_activity_main.editTextDate.getText().length() != 0) {
+        if (binding_activity_main.editTextNumberSum.getText().length() != 0) {
             database = dbHelper.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
 
@@ -224,14 +228,20 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
             }
 
             double sum = Double.parseDouble(binding_activity_main.editTextNumberSum.getText().toString());
-            //String add_data = binding_activity_main.editTextDate.getText().toString();
+            String add_data = binding_activity_main.textViewDate.getText().toString();
             contentValues.put(DBHelper.COLUMN_SUMMA, sum);
-            //contentValues.put(DBHelper.COLUMN_ADD_DATA, add_data);
+            if (add_data == "сегодня") {
+                Calendar calendar = new GregorianCalendar();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+                contentValues.put(DBHelper.COLUMN_ADD_DATA, simpleDateFormat.format(calendar.getTime()));
+            } else {
+                contentValues.put(DBHelper.COLUMN_ADD_DATA, add_data);
+            }
 
             database.insert(DBHelper.TABLE_HISTORY, null, contentValues);
 
             binding_activity_main.editTextNumberSum.setText("");
-            //binding_activity_main.editTextDate.setText("");
+            binding_activity_main.textViewDate.setText("сегодня");
             binding_activity_main.checkBoxBidPurchase.setChecked(false);
             Toast.makeText(this, "Запись сохранена", Toast.LENGTH_SHORT).show();
         } else {
