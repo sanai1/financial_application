@@ -16,15 +16,52 @@
             layout="@layout/main" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/buttonAddCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClickCategory"
-            android:text="Категории"
+            android:onClick="add_category_in_category"
+            android:text="Добавить категорию"
+            android:enabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="@+id/include3"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.953" />
+
+        <Button
+            android:id="@+id/buttonExpenseCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="100dp"
+            android:text="расход"
+            android:textSize="25dp"
+            android:enabled="false"
+            android:onClick="btn_expense_category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/include3" />
+
+        <Button
+            android:id="@+id/buttonIncomeCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="доход"
+            android:textSize="25dp"
+            android:onClick="btn_income_category"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/buttonExpenseCategory"
+            app:layout_constraintTop_toTopOf="@+id/include3" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_category"
+            android:layout_width="350dp"
+            android:layout_height="400dp"
+            app:layout_constraintBottom_toTopOf="@+id/button2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonExpenseCategory" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

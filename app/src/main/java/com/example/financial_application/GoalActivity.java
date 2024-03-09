@@ -90,8 +90,8 @@ public class GoalActivity extends AppCompatActivity {
                                 " t.dohod - t.rash as delta " +
                                 " from ( " +
                                 " select " +
-                                " sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 1 then " + DBHelper.COLUMN_SUMMA + " else 0 end)) as rash, " +
-                                " sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 0 then " + DBHelper.COLUMN_SUMMA + " else 0 end)) as dohod " +
+                                " sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 1 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA + " else 0 end)) as rash, " +
+                                " sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 0 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA + " else 0 end)) as dohod " +
                                 " substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7) as my " +
                                 " from " + DBHelper.TABLE_HISTORY + " h " +
                                 " group by substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7) " +
@@ -157,18 +157,19 @@ public class GoalActivity extends AppCompatActivity {
                 "t.dohod - t.rash as delta " +
                 "from ( " +
                 "SELECT " +
-                "sum((case when " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 1 and " + DBHelper.COLUMN_IS_EXPENSE + " = 1 then " + DBHelper.COLUMN_SUMMA_GOAL + " else 0 end)) as rash_kp, " +
-                "sum((case when " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 and " + DBHelper.COLUMN_IS_EXPENSE + " = 1 then " + DBHelper.COLUMN_SUMMA_GOAL + " else 0 end)) as rash, " +
-                "sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 0 then " + DBHelper.COLUMN_SUMMA_GOAL + " else 0 end)) as dohod, " +
+//                "sum((case when " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 1 and " + DBHelper.COLUMN_IS_EXPENSE + " = 1 then " + DBHelper.COLUMN_SUMMA_GOAL + " else 0 end)) as rash_kp, " +
+                "sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 1 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA_GOAL + " else 0 end)) as rash, " +
+                "sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 0 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA_GOAL + " else 0 end)) as dohod, " +
                 "substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7) as my " +
                 "from " + DBHelper.TABLE_HISTORY + " as h " +
                 "group by substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7)" +
                 ") t order by my";
+
         Cursor cursor = database.rawQuery(command, null);
 
         ArrayList<Integer> mas = new ArrayList<>();
         while (cursor.moveToNext()) {
-            mas.add(cursor.getInt(4));
+            mas.add(cursor.getInt(3));
         }
         cursor.close();
 
@@ -246,7 +247,6 @@ public class GoalActivity extends AppCompatActivity {
             String time = String.valueOf(time_finish).substring(0, 7);
             binding_activity_goal.textViewPS.setText("около " + String.valueOf(cnt_month) + " месяцев (по рассчету на " + time_now + ")");
             binding_activity_goal.textViewDate.setText("Дата достижения цели: " + String.valueOf(time));
-            //binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: " + percent + "%");
             contentValues.put(DBHelper.COLUMN_DATE_FINISH, time);
 
         } else if (cnt_month == 1200){

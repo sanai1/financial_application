@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         binding_activity_main.buttonIncome.setEnabled(false);
         binding_activity_main.buttonExpense.setEnabled(true);
         binding_activity_main.checkBoxBidPurchase.setChecked(false);
-        binding_activity_main.checkBoxBidPurchase.setEnabled(false);
+        binding_activity_main.checkBoxBidPurchase.setText("разовый доход");
         expense_main = false;
 
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_income);
@@ -149,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
     public void expense(View view) {
         binding_activity_main.buttonIncome.setEnabled(true);
         binding_activity_main.checkBoxBidPurchase.setEnabled(true);
+        binding_activity_main.checkBoxBidPurchase.setText("крупная покупка");
         binding_activity_main.buttonExpense.setEnabled(false);
         expense_main = true;
 
@@ -218,18 +219,21 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
 
             if (expense_main) {
                 contentValues.put(DBHelper.COLUMN_IS_EXPENSE, 1);
-                if (binding_activity_main.checkBoxBidPurchase.isChecked()) {
-                    contentValues.put(DBHelper.COLUMN_IS_BIG_PURCHASE, 1);
-                } else {
-                    contentValues.put(DBHelper.COLUMN_IS_BIG_PURCHASE, 0);
-                }
             } else {
                 contentValues.put(DBHelper.COLUMN_IS_EXPENSE, 0);
+            }
+            if (binding_activity_main.checkBoxBidPurchase.isChecked()) {
+                contentValues.put(DBHelper.COLUMN_IS_BIG_PURCHASE, 1);
+            } else {
+                contentValues.put(DBHelper.COLUMN_IS_BIG_PURCHASE, 0);
             }
 
             double sum = Double.parseDouble(binding_activity_main.editTextNumberSum.getText().toString());
             String add_data = binding_activity_main.textViewDate.getText().toString();
             contentValues.put(DBHelper.COLUMN_SUMMA, sum);
+            System.out.println(add_data);
+            System.out.println(add_data.length());
+            // TODO: при первом добавлении любой записи в историю вместо даты добавляется "сегодня"
             if (add_data == "сегодня") {
                 Calendar calendar = new GregorianCalendar();
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");

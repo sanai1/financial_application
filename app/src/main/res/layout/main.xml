@@ -12,7 +12,8 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:onClick="menu"
-        android:text="МЕНЮ"
+        android:text="меню"
+        android:textSize="25dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

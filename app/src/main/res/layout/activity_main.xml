@@ -23,7 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:onClick="save_expense"
-            android:text="СОХРАНИТЬ"
+            android:text="сохранить"
+            android:textSize="25dp"
             app:layout_constraintBottom_toBottomOf="@+id/include_menu"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -32,9 +33,10 @@
             android:id="@+id/textView"
             android:layout_width="135dp"
             android:layout_height="67dp"
-            android:layout_marginStart="35dp"
+            android:layout_marginStart="30dp"
             android:layout_marginBottom="35dp"
-            android:text="ДАТА"
+            android:text="дата"
+            android:gravity="center"
             android:textSize="50dp"
             app:layout_constraintBottom_toTopOf="@+id/button_save"
             app:layout_constraintStart_toStartOf="parent" />
@@ -45,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginBottom="15dp"
-            android:text="СУММА"
+            android:text="сумма"
             android:textSize="50dp"
             app:layout_constraintBottom_toTopOf="@+id/checkBox_bid_purchase"
             app:layout_constraintStart_toStartOf="parent" />
@@ -55,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="35dp"
             android:clickable="true"
             android:onClick="add_category_in_mainactivity"
             app:layout_constraintBottom_toTopOf="@+id/textView2"
@@ -67,9 +69,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
-            android:layout_marginBottom="50dp"
-            android:text="ДОБАВИТЬ КАТЕГОРИЮ"
-            android:textSize="20dp"
+            android:layout_marginBottom="45dp"
+            android:text="добавить категорию"
+            android:textSize="25dp"
             app:layout_constraintBottom_toTopOf="@+id/textView2"
             app:layout_constraintStart_toEndOf="@+id/floatingActionButtonAddCategory" />
 
@@ -77,10 +79,10 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="25dp"
             android:layout_marginStart="35dp"
-            android:text="КАТЕГОРИЯ"
-            android:textSize="30dp"
+            android:text="категория"
+            android:textSize="40dp"
             app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonAddCategory"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -89,7 +91,7 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="35dp"
             app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonAddCategory"
             app:layout_constraintStart_toEndOf="@+id/textView4" />
 
@@ -102,6 +104,7 @@
             android:ems="10"
             android:inputType="number"
             android:text=""
+            android:textSize="25dp"
             app:layout_constraintBottom_toTopOf="@+id/checkBox_bid_purchase"
             app:layout_constraintStart_toEndOf="@+id/textView2" />
 
@@ -110,12 +113,12 @@
             android:layout_width="125dp"
             android:layout_height="45dp"
             android:layout_marginStart="50dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="43dp"
             android:ems="10"
-            android:text="сегодня"
-            android:textSize="30dp"
             android:gravity="center"
             android:onClick="update_data"
+            android:text="сегодня"
+            android:textSize="25dp"
             app:layout_constraintBottom_toTopOf="@+id/button_save"
             app:layout_constraintStart_toEndOf="@+id/textView" />
 
@@ -127,7 +130,9 @@
             android:layout_marginStart="50dp"
             android:layout_marginTop="100dp"
             android:onClick="income"
-            android:text="ДОХОД"
+            android:text="доход"
+            android:textSize="25dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView4"
             app:layout_constraintStart_toEndOf="@+id/button_expense"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -137,8 +142,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
             android:layout_marginBottom="20dp"
-            android:text="КРУПНАЯ ПОКУПКА"
-            android:textSize="20dp"
+            android:text="крупная покупка"
+            android:textSize="25dp"
             app:layout_constraintBottom_toTopOf="@+id/textView"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -146,11 +151,13 @@
             android:id="@+id/button_expense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="75dp"
+            android:layout_marginStart="50dp"
             android:layout_marginTop="100dp"
             android:enabled="false"
             android:onClick="expense"
-            android:text="РАСХОД"
+            android:text="расход"
+            android:textSize="25dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
