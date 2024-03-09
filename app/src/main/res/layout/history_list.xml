@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="10dp">
+
+    <TextView
+        android:id="@+id/textViewDateHistory"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:textSize="15dp">
+    </TextView>
+
+    <TextView
+        android:id="@+id/textViewNameCategoryHistory"
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginStart="25dp">
+    </TextView>
+
+    <TextView
+        android:id="@+id/textViewSumCategoryHistory"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:textColor="#F44336"
+        android:textSize="20dp"></TextView>
+
+</LinearLayout>

@@ -10,7 +10,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public static final String TABLE_CATEGORY = "category";
-    public static final String COLUMN_CATEGORY_T_C = "category_t_c", COLUMN_EXPENSE = "expense";
+    public static final String COLUMN_CATEGORY_ID = "category_id", COLUMN_CATEGORY_T_C = "category_t_c", COLUMN_EXPENSE = "expense";
 
 
     public static final String TABLE_HISTORY = "history";
@@ -49,6 +49,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(command_one);
 
         String command_two = "create table " + TABLE_CATEGORY + "(" +
+                COLUMN_CATEGORY_ID + " integer, " +
                 COLUMN_CATEGORY_T_C + " text," +
                 COLUMN_EXPENSE + " integer)";
         db.execSQL(command_two);

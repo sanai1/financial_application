@@ -1,6 +1,8 @@
 package com.example.financial_application;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -9,12 +11,23 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.financial_application.databinding.ActivityHistoryBinding;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class HistoryActivity extends AppCompatActivity {
     protected ActivityHistoryBinding binding_activity_history;
+    private List<HistoryState> historyStateList;
+    private HistoryStateAdapter stateAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private DBHelper dbHelper;
+    private SQLiteDatabase database;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +35,9 @@ public class HistoryActivity extends AppCompatActivity {
 
         binding_activity_history = ActivityHistoryBinding.inflate(getLayoutInflater());
         setContentView(binding_activity_history.getRoot());
+
+        dbHelper = new DBHelper(this);
+        database = dbHelper.getWritableDatabase();
 
         binding_activity_history.historyNavigationMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -56,8 +72,54 @@ public class HistoryActivity extends AppCompatActivity {
         });
     }
 
-    public void onClickHistory(View view) {
-        System.out.println("История");
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        historyStateList = new ArrayList<>();
+        layoutManager = new LinearLayoutManager(this);
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                update_view();
+            }
+        };
+        Thread thread = new Thread(runnable);
+        thread.start();
+    }
+
+    private void update_view() {
+        String command = "select " + DBHelper.COLUMN_IS_EXPENSE + ", " + DBHelper.COLUMN_IS_BIG_PURCHASE + ", " +
+                DBHelper.COLUMN_SUMMA + ", " + DBHelper.COLUMN_ADD_DATA + ", " + DBHelper.COLUMN_CATEGORY_UID + " from " + DBHelper.TABLE_HISTORY;
+        // TODO: сделать сортировку записей истории (от самой последней к самой старой записи)
+        Cursor cursor = database.rawQuery(command, null);
+
+        String[] mas_name_category = new String[MainActivity.count_category];
+        String command_get_category = "select * from " + DBHelper.TABLE_CATEGORY;
+        Cursor cursor_get_category = database.rawQuery(command_get_category, null);
+        int indx;
+
+        while (cursor_get_category.moveToNext()) {
+            indx = cursor_get_category.getInt(0);
+            mas_name_category[indx-1] = cursor_get_category.getString(1);
+        }
+        cursor_get_category.close();
+
+        String name;
+        while (cursor.moveToNext()) {
+            name = mas_name_category[cursor.getInt(4) - 1];
+            historyStateList.add(new HistoryState(cursor.getString(3), name, cursor.getString(2), cursor.getInt(0), cursor.getInt(1)));
+        }
+        cursor.close();
+        Collections.reverse(historyStateList);
+
+        if (historyStateList.size() > 0) {
+            stateAdapter = new HistoryStateAdapter(historyStateList);
+            binding_activity_history.historyList.setAdapter(stateAdapter);
+            binding_activity_history.historyList.setLayoutManager(layoutManager);
+        }
+
     }
 
     public void menu(View view) {

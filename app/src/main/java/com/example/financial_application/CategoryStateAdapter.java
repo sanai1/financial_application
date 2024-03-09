@@ -40,12 +40,12 @@ public class CategoryStateAdapter extends RecyclerView.Adapter<CategoryStateAdap
             super(view);
 
             textViewNameCategory = view.findViewById(R.id.textViewNameCategory);
-            textViewNameCategory.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    System.out.println("нажатие на категорию");
-                }
-            });
+//            textViewNameCategory.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    System.out.println("нажатие на категорию");
+//                }
+//            });
         }
         public void update(CategoryState categoryState) {
             textViewNameCategory.setText(categoryState.getName());

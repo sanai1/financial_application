@@ -15,14 +15,24 @@
             android:id="@+id/include"
             layout="@layout/main" />
 
-        <Button
-            android:id="@+id/button"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/history_list"
+            android:layout_width="385dp"
+            android:layout_height="550dp"
+            app:layout_constraintBottom_toBottomOf="@+id/include"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewHistory" />
+
+        <TextView
+            android:id="@+id/textViewHistory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClickHistory"
+            android:layout_marginTop="27dp"
             android:text="История"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/include"
+            android:textSize="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.747"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

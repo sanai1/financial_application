@@ -107,6 +107,7 @@ public class CategoryActivity extends AppCompatActivity { //implements CategoryD
         while (cursor.moveToNext()) {
             categoryStates.add(new CategoryState(cursor.getString(0)));
         }
+        cursor.close();
 
         if (categoryStates.size() > 0) {
             categoryStateAdapter = new CategoryStateAdapter(categoryStates);

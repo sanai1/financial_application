@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
     protected UpdateDataDialog dialog_update_data;
     protected String[] mas_name_category_expense = new String[50];
     protected String[] mas_name_category_income = new String[50];
+    public static int count_category = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         for (int i = 0; i < mas_name_category_income.length; i++)
             mas_name_category_income[i] = mas_test_income[i];
 
+        count_category = len_mas_expense + len_mas_income;
         //mas_name_category_expense[0] = "expense"; // временная мера до заполнения БД реальными данными
 
         ArrayAdapter<String> adapter;
@@ -169,6 +171,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         database = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
+        contentValues.put(DBHelper.COLUMN_CATEGORY_ID, count_category+1);
+        count_category++;
         contentValues.put(DBHelper.COLUMN_EXPENSE, expense);
         contentValues.put(DBHelper.COLUMN_CATEGORY_T_C, name_category);
 
