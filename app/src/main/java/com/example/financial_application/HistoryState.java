@@ -4,38 +4,44 @@ public class HistoryState {
     private String date;
     private String name;
     private String summa;
-    private boolean is_expense;
-    private boolean is_big_purchase;
+    private int is_expense;
+    private int is_big_purchase;
+    private int[] color = {244, 67, 54};
 
     public HistoryState(String date, String name, String summa, int is_expense, int is_big_purchase) {
         this.date = date;
         this.name = name;
         this.summa = summa;
-        if (is_expense == 1) {
-            this.is_expense = true;
-        } else {
-            this.is_expense = false;
-        }
-        if (is_big_purchase == 1) {
-            this.is_big_purchase = true;
-        } else {
-            this.is_big_purchase = false;
-        }
-    }
-
-    public boolean isIs_big_purchase() {
-        return is_big_purchase;
-    }
-
-    public void setIs_big_purchase(boolean is_big_purchase) {
+        this.is_expense = is_expense;
         this.is_big_purchase = is_big_purchase;
     }
 
-    public boolean isIs_expense() {
+    public HistoryState(String date, String name, String summa, int is_expense, int is_big_purchase, int[] color) {
+        this.date = date;
+        this.name = name;
+        this.summa = summa;
+        this.is_expense = is_expense;
+        this.is_big_purchase = is_big_purchase;
+        this.color = color;
+    }
+
+    public int[] getColor() {
+        return color;
+    }
+
+    public int get_is_big_purchase() {
+        return is_big_purchase;
+    }
+
+    public void set_is_big_purchase(int is_big_purchase) {
+        this.is_big_purchase = is_big_purchase;
+    }
+
+    public int get_is_expense() {
         return is_expense;
     }
 
-    public void setIs_expense(boolean is_expense) {
+    public void set_is_expense(int is_expense) {
         this.is_expense = is_expense;
     }
 

@@ -151,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
     public void expense(View view) {
         binding_activity_main.buttonIncome.setEnabled(true);
         binding_activity_main.checkBoxBidPurchase.setEnabled(true);
+        binding_activity_main.checkBoxBidPurchase.setChecked(false);
         binding_activity_main.checkBoxBidPurchase.setText("крупная покупка");
         binding_activity_main.buttonExpense.setEnabled(false);
         expense_main = true;

@@ -37,22 +37,32 @@ public class HistoryStateAdapter extends RecyclerView.Adapter<HistoryStateAdapte
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textViewDate, textViewNameCategory, textViewSumma;
 
-        ViewHolder(View view) {
-            super(view);
-
-            textViewDate = view.findViewById(R.id.textViewDateHistory);
-            textViewNameCategory = view.findViewById(R.id.textViewNameCategoryHistory);
-            textViewSumma = view.findViewById(R.id.textViewSumCategoryHistory);
+        public ViewHolder(View itemView) {
+            super(itemView);
+            textViewDate = itemView.findViewById(R.id.textViewDateHistory);
+            textViewNameCategory = itemView.findViewById(R.id.textViewNameCategoryHistory);
+            textViewSumma = itemView.findViewById(R.id.textViewSumCategoryHistory);
 
         }
 
         public void update(HistoryState historyState) {
             textViewDate.setText(historyState.getDate());
-            textViewNameCategory.setText(historyState.getName());
             textViewSumma.setText(historyState.getSumma());
-            if (!historyState.isIs_expense()) {
-                textViewSumma.setTextColor(Color.rgb(0, 100, 0));
+            if (historyState.get_is_expense() == 0) {
+                if (historyState.get_is_big_purchase() == 1) {
+                    textViewNameCategory.setText(historyState.getName() + "**");
+                }
+                else {
+                    textViewNameCategory.setText(historyState.getName());
+                }
+            } else if (historyState.get_is_big_purchase() == 1) {
+                textViewNameCategory.setText(historyState.getName() + "*");
+            } else {
+                textViewNameCategory.setText(historyState.getName());
             }
+            int[] color = historyState.getColor();
+            System.out.println(color[0] + " " + color[1] + " " + color[2]);
+            textViewSumma.setTextColor(Color.rgb(color[0], color[1], color[2]));
         }
     }
 }

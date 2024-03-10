@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:textSize="15dp">
     </TextView>
-
+.......................
     <TextView
         android:id="@+id/textViewNameCategoryHistory"
         android:layout_width="125dp"
@@ -25,7 +25,6 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
-        android:textColor="#F44336"
         android:textSize="20dp"></TextView>
 
 </LinearLayout>

@@ -17,16 +17,16 @@
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="-80dp" />
 
-        <Button
-            android:id="@+id/button3"
+        <TextView
+            android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClickReport"
-            android:text="Отчет"
+            android:text="Скоро здесь появится кое-что интересное"
+            android:textSize="17dp"
             app:layout_constraintBottom_toBottomOf="@+id/include2"
             app:layout_constraintEnd_toEndOf="@+id/include2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/include2" />
+            app:layout_constraintStart_toStartOf="@+id/include2"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

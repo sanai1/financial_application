@@ -108,12 +108,17 @@ public class HistoryActivity extends AppCompatActivity {
 
         String name;
         while (cursor.moveToNext()) {
+            int[] color = {76, 175, 80};
             name = mas_name_category[cursor.getInt(4) - 1];
-            historyStateList.add(new HistoryState(cursor.getString(3), name, cursor.getString(2), cursor.getInt(0), cursor.getInt(1)));
+            if (cursor.getInt(0) == 1) {
+                historyStateList.add(new HistoryState(cursor.getString(3), name, cursor.getString(2), cursor.getInt(0), cursor.getInt(1)));
+            } else {
+                historyStateList.add(new HistoryState(cursor.getString(3), name, cursor.getString(2), cursor.getInt(0), cursor.getInt(1), color));
+            }
         }
         cursor.close();
         Collections.reverse(historyStateList);
-
+        // TODO: при наличии 1 категории, она не удаляется при переключении расход/доход
         if (historyStateList.size() > 0) {
             stateAdapter = new HistoryStateAdapter(historyStateList);
             binding_activity_history.historyList.setAdapter(stateAdapter);
