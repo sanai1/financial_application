@@ -173,6 +173,11 @@ public class GoalActivity extends AppCompatActivity {
         }
         cursor.close();
 
+        if (mas.size() < 2) {
+            binding_activity_goal.textViewDate.setText(R.string.little_information);
+            binding_activity_goal.textViewPS.setText("");
+            return;
+        }
         double x_sum = 0, y_sum = 0, x2_sum = 0, xy_sum = 0, n = mas.size();
         for(int i = 0; i < n; i++) {
             x_sum += i+1;
@@ -198,9 +203,9 @@ public class GoalActivity extends AppCompatActivity {
         cursor_capital.close();
         cursor_goal_sum.close();
         int cnt_month = 0;
-        String text_goal = "К сожалению для достижения вашей цели понадобиться более 100 лет";
+        String text_goal = "К сожалению для достижения вашей цели понадобиться более 50 лет";
 
-        while (cnt_month < 1200) {
+        while (cnt_month < 600){
             if (cnt_month == 0 && sum_capital >= goal_sum){
                 text_goal = "Ваша цель уже достигнута!!!";
                 break;

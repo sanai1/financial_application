@@ -4,4 +4,8 @@
         <i>* - крупная покупка    </i>
         <i>    ** - разовый доход</i>
     </string>
+    <string name="little_information">
+        Необходима информация \n
+        хотя бы за 2 месяца
+    </string>
 </resources>

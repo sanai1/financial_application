@@ -61,7 +61,6 @@ public class HistoryStateAdapter extends RecyclerView.Adapter<HistoryStateAdapte
                 textViewNameCategory.setText(historyState.getName());
             }
             int[] color = historyState.getColor();
-            System.out.println(color[0] + " " + color[1] + " " + color[2]);
             textViewSumma.setTextColor(Color.rgb(color[0], color[1], color[2]));
         }
     }

@@ -1,14 +1,17 @@
 package com.example.financial_application;
 
 
+import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,19 +22,18 @@ import com.example.financial_application.databinding.ActivityMainBinding;
 import com.example.financial_application.databinding.AddCategoryBinding;
 import com.google.android.material.navigation.NavigationView;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.UUID;
 
 
-public class MainActivity extends AppCompatActivity implements CategoryDialog.DialogListenerAdd, UpdateDataDialog.DialogListenerData{
+public class MainActivity extends AppCompatActivity implements CategoryDialog.DialogListenerAdd {
     ActivityMainBinding binding_activity_main;
     AddCategoryBinding binding_add_category;
     protected DBHelper dbHelper;
     protected SQLiteDatabase database;
     protected boolean expense_main = true;
     protected CategoryDialog dialog_category;
-    protected UpdateDataDialog dialog_update_data;
+    protected Calendar calendar = Calendar.getInstance();
     protected String[] mas_name_category_expense = new String[50];
     protected String[] mas_name_category_income = new String[50];
     public static int count_category = 0;
@@ -76,13 +78,9 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         });
 
         dbHelper = new DBHelper(this);
-
+        setInitialDate();
         dialog_category = new CategoryDialog();
         dialog_category.setMyDialogListener(this);
-
-        dialog_update_data = new UpdateDataDialog();
-        dialog_update_data.setMyDialogDataListener(this);
-
 
         get_mas_expense();
     }
@@ -172,8 +170,9 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         database = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(DBHelper.COLUMN_CATEGORY_ID, count_category+1);
-        count_category++;
+        UUID uuid = UUID.randomUUID();
+        System.out.println(uuid);
+        contentValues.put(DBHelper.COLUMN_CATEGORY_ID, String.valueOf(uuid));
         contentValues.put(DBHelper.COLUMN_EXPENSE, expense);
         contentValues.put(DBHelper.COLUMN_CATEGORY_T_C, name_category);
 
@@ -206,11 +205,25 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
     }
 
     public void update_data(View view) {
-        dialog_update_data.show(getSupportFragmentManager(), "dialogData");
+        new DatePickerDialog(MainActivity.this, onDateSetListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
-    public void onDialogDataClick(String text) {
-        binding_activity_main.textViewDate.setText(text);
+    private void setInitialDate() {
+        binding_activity_main.textViewDate.setText(DateUtils.formatDateTime(this,
+                calendar.getTimeInMillis(),
+                DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR));
     }
+    private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            setInitialDate();
+        }
+    };
 
     public void menu(View view) {
         binding_activity_main.drawerLayoutId.openDrawer(GravityCompat.START);
@@ -221,6 +234,13 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         if (binding_activity_main.editTextNumberSum.getText().length() != 0) {
             database = dbHelper.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
+
+            String command_get_category = "select " + DBHelper.COLUMN_CATEGORY_ID + " from " + DBHelper.TABLE_CATEGORY +
+                    " where " + DBHelper.COLUMN_CATEGORY_T_C + " = '" + binding_activity_main.spinner.getSelectedItem().toString() + "'";
+            Cursor cursorUid = database.rawQuery(command_get_category, null);
+            cursorUid.moveToNext();
+            contentValues.put(DBHelper.COLUMN_CATEGORY_UID, cursorUid.getString(0));
+            cursorUid.close();
 
             if (expense_main) {
                 contentValues.put(DBHelper.COLUMN_IS_EXPENSE, 1);
@@ -234,23 +254,21 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
             }
 
             double sum = Double.parseDouble(binding_activity_main.editTextNumberSum.getText().toString());
-            String add_data = binding_activity_main.textViewDate.getText().toString();
             contentValues.put(DBHelper.COLUMN_SUMMA, sum);
-            System.out.println(add_data);
-            System.out.println(add_data.length());
-            // TODO: при первом добавлении любой записи в историю вместо даты добавляется "сегодня"
-            if (add_data == "сегодня") {
-                Calendar calendar = new GregorianCalendar();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
-                contentValues.put(DBHelper.COLUMN_ADD_DATA, simpleDateFormat.format(calendar.getTime()));
-            } else {
-                contentValues.put(DBHelper.COLUMN_ADD_DATA, add_data);
-            }
 
+            String year = String.valueOf(calendar.get(Calendar.YEAR));
+            String month = String.valueOf(calendar.get(Calendar.MONTH));
+            String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+            if (month.length() == 1) {
+                month = "0" + month;
+            }
+            if (day.length() == 1) {
+                day = "0" + day;
+            }
+            contentValues.put(DBHelper.COLUMN_ADD_DATA, day + "." + month + "." + year);
             database.insert(DBHelper.TABLE_HISTORY, null, contentValues);
 
             binding_activity_main.editTextNumberSum.setText("");
-            binding_activity_main.textViewDate.setText("сегодня");
             binding_activity_main.checkBoxBidPurchase.setChecked(false);
             Toast.makeText(this, "Запись сохранена", Toast.LENGTH_SHORT).show();
         } else {

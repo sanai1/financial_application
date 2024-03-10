@@ -19,6 +19,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class HistoryActivity extends AppCompatActivity {
@@ -95,21 +96,20 @@ public class HistoryActivity extends AppCompatActivity {
         // TODO: сделать сортировку записей истории (от самой последней к самой старой записи)
         Cursor cursor = database.rawQuery(command, null);
 
-        String[] mas_name_category = new String[MainActivity.count_category];
+        HashMap<String, String> hashMapCategory = new HashMap<>();
         String command_get_category = "select * from " + DBHelper.TABLE_CATEGORY;
         Cursor cursor_get_category = database.rawQuery(command_get_category, null);
-        int indx;
 
         while (cursor_get_category.moveToNext()) {
-            indx = cursor_get_category.getInt(0);
-            mas_name_category[indx-1] = cursor_get_category.getString(1);
+            hashMapCategory.put(cursor_get_category.getString(0), cursor_get_category.getString(1));
         }
         cursor_get_category.close();
 
         String name;
         while (cursor.moveToNext()) {
             int[] color = {76, 175, 80};
-            name = mas_name_category[cursor.getInt(4) - 1];
+            name = hashMapCategory.get(cursor.getString(4));
+
             if (cursor.getInt(0) == 1) {
                 historyStateList.add(new HistoryState(cursor.getString(3), name, cursor.getString(2), cursor.getInt(0), cursor.getInt(1)));
             } else {

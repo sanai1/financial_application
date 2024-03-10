@@ -111,7 +111,7 @@
         <EditText
             android:id="@+id/editTextNumberSum"
             android:layout_width="125dp"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="48dp"
             android:ems="10"
             android:inputType="number"
@@ -124,18 +124,18 @@
 
         <TextView
             android:id="@+id/textViewDate"
-            android:layout_width="125dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="52dp"
-            android:ems="10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:ems="8"
             android:gravity="center"
             android:onClick="update_data"
             android:text="сегодня"
-            android:textSize="25dp"
+            android:textSize="20dp"
             app:layout_constraintBottom_toTopOf="@+id/button_save"
             app:layout_constraintStart_toEndOf="@+id/textView"
             app:layout_constraintTop_toBottomOf="@+id/checkBox_bid_purchase"
-            app:layout_constraintVertical_bias="0.402" />
+            app:layout_constraintVertical_bias="0.426" />
 
         <Button
             android:id="@+id/button_income"
