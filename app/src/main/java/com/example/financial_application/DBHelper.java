@@ -40,33 +40,33 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String command_one = "create table " + TABLE_HISTORY + "(" +
-                COLUMN_UID + " integer," +
+                COLUMN_UID + " text," +
                 COLUMN_IS_EXPENSE + " integer," +
                 COLUMN_IS_BIG_PURCHASE + " integer," +
                 COLUMN_SUMMA + " real," +
                 COLUMN_ADD_DATA + " text," +
-                COLUMN_CATEGORY_UID + " integer)";
+                COLUMN_CATEGORY_UID + " text)";
         db.execSQL(command_one);
 
         String command_two = "create table " + TABLE_CATEGORY + "(" +
-                COLUMN_CATEGORY_ID + " integer, " +
-                COLUMN_CATEGORY_T_C + " text," +
+                COLUMN_CATEGORY_ID + " text, " +
+                COLUMN_CATEGORY_NAME + " text," +
                 COLUMN_EXPENSE + " integer)";
         db.execSQL(command_two);
 
         String command_three = "create table " + TABLE_GOAL + "(" +
                 COLUMN_NAME + " text," +
-                COLUMN_SUMMA_GOAL + " integer," +
-                COLUMN_START_CAPITAL + " integer," +
-                COLUMN_PERCENT + " integer," +
-                COLUMN_INFLATION + " integer," +
-                COLUMN_GOAL_UID + " integer)";
+                COLUMN_SUMMA_GOAL + " real," +
+                COLUMN_START_CAPITAL + " real," +
+                COLUMN_PERCENT + " real," +
+                COLUMN_INFLATION + " real," +
+                COLUMN_GOAL_UID + " text)";
         db.execSQL(command_three);
 
         String command_four = "create table " + TABLE_CAPITAL + "(" +
                 COLUMN_MONTH + " text," +
                 COLUMN_CAPITAL_SUM + " real, " +
-                COLUMN_UID_CAPITAL + " integer)";
+                COLUMN_UID_CAPITAL + " text)";
         db.execSQL(command_four);
 
         String command_five = "create table " + TABLE_CALCULATION_INFO + "(" +

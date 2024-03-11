@@ -282,7 +282,7 @@ public class GoalActivity extends AppCompatActivity {
         create_menu_start();
 
         binding_activity_goal_start.textViewCreateGoal.setText("Отредактируйте свою цель");
-        binding_activity_goal_start.textViewCreateGoal.setTextSize(25);
+        binding_activity_goal_start.textViewCreateGoal.setTextSize(23);
         String command_info_goal = "select * from " + DBHelper.TABLE_GOAL;
         Cursor cursor = database.rawQuery(command_info_goal, null);
         cursor.moveToNext();
