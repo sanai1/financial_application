@@ -119,16 +119,15 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
             mas_name_category_income[i] = mas_test_income[i];
 
         count_category = len_mas_expense + len_mas_income;
-        //mas_name_category_expense[0] = "expense"; // временная мера до заполнения БД реальными данными
 
         ArrayAdapter<String> adapter;
         if (binding_activity_main.buttonExpense.isActivated()) {
-            adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_income);
+            adapter = new ArrayAdapter(this, R.layout.spinner_item, mas_name_category_income);
         } else {
-            adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_expense);
+            adapter = new ArrayAdapter(this, R.layout.spinner_item, mas_name_category_expense);
         }
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(R.layout.spinner_item);
         binding_activity_main.spinner.setAdapter(adapter);
     }
 
@@ -140,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         expense_main = false;
 
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_income);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(R.layout.spinner_item);
         binding_activity_main.spinner.setAdapter(adapter);
 
         Toast.makeText(this, "Доход", Toast.LENGTH_SHORT).show();
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         expense_main = true;
 
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_expense);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(R.layout.spinner_item);
         binding_activity_main.spinner.setAdapter(adapter);
 
         Toast.makeText(this, "Расход", Toast.LENGTH_SHORT).show();

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">financial_application</string>
+    <string name="app_name">financial_assistant</string>
     <string name="info_history">
         <i>* - крупная покупка    </i>
         <i>    ** - разовый доход</i>

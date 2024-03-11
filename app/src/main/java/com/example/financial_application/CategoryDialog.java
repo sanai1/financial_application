@@ -31,7 +31,7 @@ public class CategoryDialog extends DialogFragment implements View.OnClickListen
     public void onStart() {
         super.onStart();
         EditText editText = (EditText) getDialog().findViewById(R.id.editTextTextNameCategoryAddCategory);
-        editText.setText("Название категории");
+        editText.setText("");
         RadioGroup radioGroup = (RadioGroup) getDialog().findViewById(R.id.radioGroup);
         radioGroup.clearCheck();
     }
@@ -40,7 +40,7 @@ public class CategoryDialog extends DialogFragment implements View.OnClickListen
     public void onClick(View v) {
         EditText editText = (EditText) getDialog().findViewById(R.id.editTextTextNameCategoryAddCategory);
         RadioGroup radioGroup = (RadioGroup) getDialog().findViewById(R.id.radioGroup);
-        if (radioGroup.getCheckedRadioButtonId() != -1 && editText.getText().toString() != "Название категории") {
+        if (radioGroup.getCheckedRadioButtonId() != -1 && !editText.getText().toString().isEmpty()) {
             RadioButton radioButton_expense = (RadioButton) getDialog().findViewById(R.id.radioButtonExpense);
             if (dListenerAdd != null) {
                 name_category = editText.getText().toString();
@@ -52,7 +52,7 @@ public class CategoryDialog extends DialogFragment implements View.OnClickListen
     }
 
     public interface DialogListenerAdd {
-        void onDialogClickListener (String name_categoty, int expense);
+        void onDialogClickListener (String name_category, int expense);
     }
 
     public void setMyDialogListener(DialogListenerAdd listener) {

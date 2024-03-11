@@ -152,6 +152,24 @@ public class GoalActivity extends AppCompatActivity {
         thread.start();
     }
 
+    private String get_percent(double capital_now, double goal_sum) {
+        double percent_double = (capital_now / goal_sum) * 100.0;
+        String percent = String.valueOf(percent_double);
+        try {
+            if (percent_double >= 100) {
+                percent = percent.substring(0, 5);
+            } else {
+                percent = percent.substring(0, 4);
+            }
+        } catch (Exception ex) {
+            percent = percent;
+        } finally {
+            if (Double.valueOf(percent) < 0.01) {
+                percent = "менее 0.01";
+            }
+        }
+        return percent;
+    }
     public void calculation(View view) {
         String command = "select  t.*," +
                 "t.dohod - t.rash as delta " +
@@ -173,22 +191,6 @@ public class GoalActivity extends AppCompatActivity {
         }
         cursor.close();
 
-        if (mas.size() < 2) {
-            binding_activity_goal.textViewDate.setText(R.string.little_information);
-            binding_activity_goal.textViewPS.setText("");
-            return;
-        }
-        double x_sum = 0, y_sum = 0, x2_sum = 0, xy_sum = 0, n = mas.size();
-        for(int i = 0; i < n; i++) {
-            x_sum += i+1;
-            y_sum += mas.get(i);
-            x2_sum += (i+1) * (i+1);
-            xy_sum += (i+1) * mas.get(i);
-        }
-        double k, b;
-        k = (n * xy_sum  -  x_sum * y_sum) / (n * x2_sum  -  x_sum * x_sum);
-        b = (y_sum  -  k * x_sum) / n;
-
         String command_capital = "select * from " + DBHelper.TABLE_CAPITAL;
         String command_goal_sum = "select * from " + DBHelper.TABLE_GOAL;
 
@@ -202,6 +204,26 @@ public class GoalActivity extends AppCompatActivity {
         double goal_sum = cursor_goal_sum.getDouble(1);
         cursor_capital.close();
         cursor_goal_sum.close();
+
+        if (mas.size() < 2) {
+            binding_activity_goal.textViewDate.setText(R.string.little_information);
+            binding_activity_goal.textViewPS.setText("");
+
+            String percent = get_percent(capital_now, goal_sum);
+            binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: " + percent + "%");
+            return;
+        }
+        double x_sum = 0, y_sum = 0, x2_sum = 0, xy_sum = 0, n = mas.size();
+        for(int i = 0; i < n; i++) {
+            x_sum += i+1;
+            y_sum += mas.get(i);
+            x2_sum += (i+1) * (i+1);
+            xy_sum += (i+1) * mas.get(i);
+        }
+        double k, b;
+        k = (n * xy_sum  -  x_sum * y_sum) / (n * x2_sum  -  x_sum * x_sum);
+        b = (y_sum  -  k * x_sum) / n;
+
         int cnt_month = 0;
         String text_goal = "К сожалению для достижения вашей цели понадобиться более 50 лет";
 
@@ -214,22 +236,6 @@ public class GoalActivity extends AppCompatActivity {
             sum_capital += k*cnt_month + b;
             if (sum_capital >= goal_sum) {
                 break;
-            }
-        }
-        double percent_double = (capital_now / goal_sum) * 100.0;
-        String percent = String.valueOf(percent_double);
-
-        try {
-            if (percent_double >= 100) {
-                percent = percent.substring(0, 5);
-            } else {
-                percent = percent.substring(0, 4);
-            }
-        } catch (Exception ex) {
-            percent = percent;
-        } finally {
-            if (Double.valueOf(percent) < 0.01) {
-                percent = "менее 0.01";
             }
         }
 
@@ -262,6 +268,7 @@ public class GoalActivity extends AppCompatActivity {
             binding_activity_goal.textViewDate.setText(text_goal);
             contentValues.put(DBHelper.COLUMN_DATE_FINISH, "уже достигнута");
         }
+        String percent = get_percent(capital_now, goal_sum);
         binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: " + percent + "%");
 
         contentValues.put(DBHelper.COLUMN_DATE_CALCULATION, time_now);
