@@ -50,7 +50,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String command_two = "create table " + TABLE_CATEGORY + "(" +
                 COLUMN_CATEGORY_ID + " text, " +
-                COLUMN_CATEGORY_NAME + " text," +
+                COLUMN_CATEGORY_T_C + " text," +
                 COLUMN_EXPENSE + " integer)";
         db.execSQL(command_two);
 
