@@ -67,6 +67,11 @@ public class HistoryActivity extends AppCompatActivity {
                     Toast.makeText(HistoryActivity.this, "Категории", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(HistoryActivity.this, CategoryActivity.class);
                     startActivity(intent);
+                } else if (id == R.id.nav_feedback) {
+                    binding_activity_history.drawerLayoutId.close();
+                    Toast.makeText(HistoryActivity.this, "Обратная связь", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(HistoryActivity.this, FeedbackActivity.class);
+                    startActivity(intent);
                 }
                 return true;
             }

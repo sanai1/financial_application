@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,12 +16,21 @@ import androidx.core.view.GravityCompat;
 
 import com.example.financial_application.databinding.ActivityGoalBinding;
 import com.example.financial_application.databinding.ActivityGoalStartBinding;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.google.android.material.navigation.NavigationView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 public class GoalActivity extends AppCompatActivity {
     protected ActivityGoalStartBinding binding_activity_goal_start;
@@ -29,6 +39,9 @@ public class GoalActivity extends AppCompatActivity {
     protected SQLiteDatabase database;
     private boolean start_activity = true;
     private boolean first_version_goal = true;
+    private Integer number_start_sum = null;
+    private LineChart lineChart;
+    private List<String> stringList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -46,9 +59,11 @@ public class GoalActivity extends AppCompatActivity {
         if (start_activity) {
             create_menu_start();
         } else {
-            create_goal();
+            create_menu();
         }
 
+        lineChart = findViewById(R.id.line_chart);
+        stringList = new ArrayList<>();
     }
 
     protected void onStart() {
@@ -135,17 +150,26 @@ public class GoalActivity extends AppCompatActivity {
             public void run() {
                 String command_calculation_info = "select * from " + DBHelper.TABLE_CALCULATION_INFO;
                 Cursor cursor = database.rawQuery(command_calculation_info, null);
+                String percent = null;
                 if(cursor.moveToLast()) {
                     String text_add_date = cursor.getString(2);
                     binding_activity_goal.textViewDate.setText("Дата достижения цели: " + text_add_date);
                     String text_ps = "около " + cursor.getInt(1) + " месяцев (по рассчету на " + cursor.getString(0) + ")";
                     binding_activity_goal.textViewPS.setText(text_ps);
-                    String percent = cursor.getString(3);
+                    percent = cursor.getString(3);
                     if (percent != null) {
                         binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: " + percent + "%");
                     }
                 }
                 cursor.close();
+
+                String command = "select " + DBHelper.COLUMN_START_CAPITAL + " from " + DBHelper.TABLE_GOAL;
+                Cursor cursor_goal = database.rawQuery(command, null);
+                cursor_goal.moveToNext();
+                Double summa = Double.valueOf(cursor_goal.getString(0));
+                cursor_goal.close();
+
+                make_chart_start(summa);
             }
         };
         Thread thread = new Thread(runnable);
@@ -276,6 +300,99 @@ public class GoalActivity extends AppCompatActivity {
 
         contentValues.put(DBHelper.COLUMN_PERCENT_DATE, percent);
         database.insert(DBHelper.TABLE_CALCULATION_INFO, null, contentValues);
+
+        make_chart();
+    }
+
+    private void make_chart_start(Double summa) {
+        Description description = new Description();
+        description.setText("");
+        description.setPosition(150f, 15f);
+
+        lineChart.setDescription(description);
+        lineChart.getAxisRight().setDrawLabels(false);
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM");
+        Double now_date = Double.valueOf(format.format(Calendar.getInstance().getTime())), fan_date = now_date;
+
+        String str;
+        for (int i = 0; i < 6; i++) {
+            if (fan_date % 1 != 12) {
+                fan_date += 0.01;
+            } else {
+                fan_date += 1;
+                fan_date -= 0.12;
+            }
+            str = String.valueOf(fan_date % 1).substring(3, 4) + "." + String.valueOf(Integer.valueOf((int) (fan_date - (fan_date % 1))));
+            if (str.length() < 7) {
+                str = "0" + str;
+            }
+            stringList.add(str);
+        }
+
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM); //TODO
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(stringList));
+        xAxis.setLabelCount(6);
+        xAxis.setGranularity(1f); //TODO
+
+        YAxis yAxis = lineChart.getAxisLeft();
+        double min_sum = summa/2;
+        yAxis.setAxisMinimum((float) min_sum);
+        double max_sum = summa*2 - min_sum;
+        yAxis.setAxisMaximum((float) max_sum);
+        yAxis.setAxisLineWidth(2f);
+        yAxis.setAxisLineColor(Color.BLACK);
+        yAxis.setLabelCount(10);
+
+        List<Entry> entryList = new ArrayList<>();
+        int sum = (int) (summa - summa % 1);
+        for (int i = 0; i < 6; i++) {
+            entryList.add(new Entry(i, sum));
+        }
+
+        LineDataSet dataSet = new LineDataSet(entryList, "капитал");
+        dataSet.setColor(Color.BLUE);
+
+        LineData lineData = new LineData(dataSet);
+        lineChart.setData(lineData);
+        lineChart.invalidate();
+    }
+
+    private void make_chart() {
+        Description description = new Description();
+        description.setText("");
+        description.setPosition(150f, 15f);
+
+        lineChart.setDescription(description);
+        lineChart.getAxisRight().setDrawLabels(false);
+
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(stringList));
+        xAxis.setLabelCount(4);
+        xAxis.setGranularity(1f);
+
+        YAxis yAxis = lineChart.getAxisLeft();
+        yAxis.setAxisMinimum(0f);
+        yAxis.setAxisMaximum(100f);
+        yAxis.setAxisLineWidth(2f);
+        yAxis.setAxisLineColor(Color.BLACK);
+        yAxis.setLabelCount(10);
+
+        List<Entry> entryList = new ArrayList<>();
+        entryList.add(new Entry(0, 10f));
+        entryList.add(new Entry(1, 12f));
+        entryList.add(new Entry(2, 17f));
+        entryList.add(new Entry(3, 14f));
+
+        LineDataSet dataSet = new LineDataSet(entryList, "Matematika");
+        dataSet.setColor(Color.BLUE);
+
+        LineData lineData = new LineData(dataSet);
+        lineChart.setData(lineData);
+        lineChart.invalidate();
+
     }
 
     public void name_goal(View view) {
@@ -338,13 +455,18 @@ public class GoalActivity extends AppCompatActivity {
                     Toast.makeText(GoalActivity.this, "Категории", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(GoalActivity.this, CategoryActivity.class);
                     startActivity(intent);
+                } else if (id == R.id.nav_feedback) {
+                    binding_activity_goal_start.goalDrawerLayout.close();
+                    Toast.makeText(GoalActivity.this, "Обратная связь", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(GoalActivity.this, FeedbackActivity.class);
+                    startActivity(intent);
                 }
                 return true;
             }
         });
     }
 
-    private void create_goal() {
+    private void create_menu() {
         setContentView(R.layout.activity_goal);
         setContentView(binding_activity_goal.getRoot());
 
@@ -386,6 +508,11 @@ public class GoalActivity extends AppCompatActivity {
                     Toast.makeText(GoalActivity.this, "Категории", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(GoalActivity.this, CategoryActivity.class);
                     startActivity(intent);
+                } else if (id == R.id.nav_feedback) {
+                    binding_activity_goal.goalDrawerLayout.close();
+                    Toast.makeText(GoalActivity.this, "Обратная связь", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(GoalActivity.this, FeedbackActivity.class);
+                    startActivity(intent);
                 }
                 return true;
             }
@@ -420,7 +547,7 @@ public class GoalActivity extends AppCompatActivity {
     public void save_goal(View view) {
         if (!first_version_goal) {
             update_goal();
-            create_goal();
+            create_menu();
             binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: не рассчитан");
             binding_activity_goal.textViewDate.setText("Дата достижения цели: не рассчитана");
             binding_activity_goal.textViewPS.setText("");
@@ -428,7 +555,7 @@ public class GoalActivity extends AppCompatActivity {
         }
         first_version_goal = false;
         boolean is_exception = false;
-        Integer number_sum = null, number_start_sum = null, number_percent = null, number_inflation;
+        Integer number_sum = null, number_percent = null, number_inflation;
         try {
             number_sum = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberSum.getText()));
             number_start_sum = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberStartSum.getText()));
@@ -475,7 +602,18 @@ public class GoalActivity extends AppCompatActivity {
 
             Toast.makeText(this, "Цель добавлена", Toast.LENGTH_SHORT).show();
 
-            create_goal();
+            create_menu();
+
+
+            // TODO: по нажатию на кнопку необходимо перестраивать график (линейный, без доп данных)
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    //make_chart_start(Double.valueOf(number_start_sum));
+                }
+            };
+            Thread thread = new Thread(runnable);
+            thread.start();
         }
     }
 }

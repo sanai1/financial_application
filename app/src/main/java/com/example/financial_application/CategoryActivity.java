@@ -69,16 +69,16 @@ public class CategoryActivity extends AppCompatActivity { //implements CategoryD
                 } else if (id == R.id.nav_categories) {
                     binding_activity_category.drawerLayoutId.close();
                     Toast.makeText(CategoryActivity.this, "Категории", Toast.LENGTH_SHORT).show();
+                } else if (id == R.id.nav_feedback) {
+                    binding_activity_category.drawerLayoutId.close();
+                    Toast.makeText(CategoryActivity.this, "Обратная связь", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(CategoryActivity.this, FeedbackActivity.class);
+                    startActivity(intent);
                 }
                 return true;
             }
         });
     }
-
-//    public void add_category_in_category(View view) {
-//        System.out.println("Категории");
-//        categoryDialog.show(getSupportFragmentManager(), "dialog_category");
-//    }
 
     @Override
     protected void onStart() {

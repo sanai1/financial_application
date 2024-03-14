@@ -14,15 +14,15 @@
         <include
             android:id="@+id/include_menu"
             layout="@layout/main"
-            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteX="-41dp"
             tools:layout_editor_absoluteY="0dp" />
 
         <Button
             android:id="@+id/button_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="655dp"
-            android:layout_marginBottom="60dp"
+            android:layout_marginTop="752dp"
+            android:layout_marginBottom="40dp"
             android:onClick="save_expense"
             android:text="сохранить"
             android:textSize="25dp"
@@ -33,17 +33,18 @@
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="135dp"
-            android:layout_height="67dp"
-            android:layout_marginStart="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="556dp"
-            android:layout_marginBottom="35dp"
             android:gravity="center"
             android:text="дата"
-            android:textSize="50dp"
-            app:layout_constraintBottom_toTopOf="@+id/button_save"
+            android:textSize="25dp"
+            app:layout_constraintBottom_toTopOf="@+id/editTextComment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.126"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/include_menu" />
+            app:layout_constraintTop_toTopOf="@+id/include_menu"
+            app:layout_constraintVertical_bias="0.46" />
 
         <EditText
             android:id="@+id/editTextNumberSum"
@@ -52,8 +53,10 @@
             android:inputType="number"
             android:layout_marginTop="406dp"
             android:layout_marginBottom="15dp"
-            android:hint="Введите сумму"
-            android:textSize="40dp"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="введите сумму"
+            android:textSize="25dp"
             app:layout_constraintBottom_toTopOf="@+id/checkBox_bid_purchase"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +66,7 @@
             android:id="@+id/floatingActionButtonAddCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
+            android:layout_marginStart="30dp"
             android:layout_marginTop="315dp"
             android:layout_marginBottom="35dp"
             android:clickable="true"
@@ -82,21 +85,26 @@
             android:text="добавить категорию"
             android:textSize="25dp"
             app:layout_constraintBottom_toTopOf="@+id/editTextNumberSum"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.333"
             app:layout_constraintStart_toEndOf="@+id/floatingActionButtonAddCategory"
             app:layout_constraintTop_toBottomOf="@+id/textView4"
-            app:layout_constraintVertical_bias="0.984" />
+            app:layout_constraintVertical_bias="0.845" />
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:layout_marginBottom="25dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="15dp"
             android:text="категория"
-            android:textSize="40dp"
+            android:textSize="25dp"
             app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonAddCategory"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.119"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_expense" />
+            app:layout_constraintTop_toBottomOf="@+id/button_expense"
+            app:layout_constraintVertical_bias="0.513" />
 
         <Spinner
             android:id="@+id/spinner"
@@ -105,23 +113,29 @@
             android:layout_marginStart="25dp"
             android:layout_marginBottom="30dp"
             app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonAddCategory"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.256"
             app:layout_constraintStart_toEndOf="@+id/textView4"
-            app:layout_constraintTop_toBottomOf="@+id/button_expense" />
+            app:layout_constraintTop_toBottomOf="@+id/button_expense"
+            app:layout_constraintVertical_bias="0.78" />
 
         <TextView
             android:id="@+id/textViewDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:ems="8"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="25dp"
+            android:ems="7"
             android:gravity="center"
             android:onClick="update_data"
             android:text="сегодня"
-            android:textSize="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/button_save"
+            android:textSize="25dp"
+            app:layout_constraintBottom_toTopOf="@+id/editTextComment"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView"
             app:layout_constraintTop_toBottomOf="@+id/checkBox_bid_purchase"
-            app:layout_constraintVertical_bias="0.426" />
+            app:layout_constraintVertical_bias="0.292" />
 
         <Button
             android:id="@+id/button_income"
@@ -139,12 +153,12 @@
             android:id="@+id/checkBox_bid_purchase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
             android:layout_marginTop="488dp"
             android:layout_marginBottom="20dp"
             android:text="крупная покупка"
             android:textSize="25dp"
             app:layout_constraintBottom_toTopOf="@+id/textView"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/include_menu" />
 
@@ -166,12 +180,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
-            android:text="Капитал"
+            android:text="капитал"
             android:textSize="25dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.747"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editTextComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="677dp"
+            android:layout_marginBottom="30dp"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="комментарий"
+            android:inputType="text"
+            android:textSize="25dp"
+            app:layout_constraintBottom_toTopOf="@+id/button_save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/include_menu"
+            app:layout_constraintVertical_bias="0.545" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

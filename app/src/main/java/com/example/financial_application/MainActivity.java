@@ -72,6 +72,11 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
                     Toast.makeText(MainActivity.this, "Категории", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
                     startActivity(intent);
+                } else if (id == R.id.nav_feedback) {
+                    binding_activity_main.drawerLayoutId.close();
+                    Toast.makeText(MainActivity.this, "Обратная связь", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, FeedbackActivity.class);
+                    startActivity(intent);
                 }
                 return true;
             }
@@ -138,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         binding_activity_main.checkBoxBidPurchase.setText("разовый доход");
         expense_main = false;
 
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_income);
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, R.layout.spinner_item, mas_name_category_income);
         adapter.setDropDownViewResource(R.layout.spinner_item);
         binding_activity_main.spinner.setAdapter(adapter);
 
@@ -153,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         binding_activity_main.buttonExpense.setEnabled(false);
         expense_main = true;
 
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_expense);
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, R.layout.spinner_item, mas_name_category_expense);
         adapter.setDropDownViewResource(R.layout.spinner_item);
         binding_activity_main.spinner.setAdapter(adapter);
 
@@ -184,8 +189,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
             mas_test_expense[mas_test_expense.length - 1] = name_category;
             mas_name_category_expense = mas_test_expense;
             if (expense_main) {
-                ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_expense);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+                ArrayAdapter<String> adapter = new ArrayAdapter(this, R.layout.spinner_item, mas_name_category_expense);
+                adapter.setDropDownViewResource(R.layout.spinner_item);
                 binding_activity_main.spinner.setAdapter(adapter);
             }
         } else {
@@ -195,8 +200,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
             mas_test_income[mas_test_income.length - 1] = name_category;
             mas_name_category_income = mas_test_income;
             if (!expense_main) {
-                ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mas_name_category_income);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+                ArrayAdapter<String> adapter = new ArrayAdapter(this, R.layout.spinner_item, mas_name_category_income);
+                adapter.setDropDownViewResource(R.layout.spinner_item);
                 binding_activity_main.spinner.setAdapter(adapter);
             }
         }
@@ -265,7 +270,15 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
                 day = "0" + day;
             }
             contentValues.put(DBHelper.COLUMN_ADD_DATA, day + "." + month + "." + year);
+            String uid = UUID.randomUUID().toString();
+            contentValues.put(DBHelper.COLUMN_UID, uid);
             database.insert(DBHelper.TABLE_HISTORY, null, contentValues);
+
+            ContentValues contentValuesComment = new ContentValues();
+            contentValuesComment.put(DBHelper.COLUMN_UID_COMMENT, uid);
+            String comment = binding_activity_main.editTextComment.getText().toString();
+            contentValuesComment.put(DBHelper.COLUMN_COMMENT, comment);
+            database.insert(DBHelper.TABLE_COMMENTS, null, contentValuesComment);
 
             binding_activity_main.editTextNumberSum.setText("");
             binding_activity_main.checkBoxBidPurchase.setChecked(false);
