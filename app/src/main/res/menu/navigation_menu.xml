@@ -16,5 +16,8 @@
     <item
         android:id="@+id/nav_categories"
         android:title="КАТЕГОРИИ" />
+    <item
+        android:id="@+id/nav_feedback"
+        android:title="ОБРАТНАЯ СВЯЗЬ" />
 
 </menu>

@@ -51,6 +51,11 @@ public class ReportActivity extends AppCompatActivity {
                     Toast.makeText(ReportActivity.this, "Категории", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ReportActivity.this, CategoryActivity.class);
                     startActivity(intent);
+                } else if (id == R.id.nav_feedback) {
+                    binding_activity_report.drawerLayoutId.close();
+                    Toast.makeText(ReportActivity.this, "Обратная связь", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ReportActivity.this, FeedbackActivity.class);
+                    startActivity(intent);
                 }
                 return true;
             }

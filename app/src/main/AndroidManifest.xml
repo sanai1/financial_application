@@ -25,6 +25,7 @@
         <activity android:name="com.example.financial_application.HistoryActivity" />
         <activity android:name="com.example.financial_application.ReportActivity" />
         <activity android:name="com.example.financial_application.CategoryActivity" />
+        <activity android:name="com.example.financial_application.FeedbackActivity" />
     </application>
 
 </manifest>

@@ -32,6 +32,10 @@ public class DBHelper extends SQLiteOpenHelper {
             COLUMN_DATE_FINISH = "date_finish", COLUMN_PERCENT_DATE = "percent_date";
 
 
+    public static final String TABLE_COMMENTS = "comments";
+    public static final String COLUMN_UID_COMMENT = "uid_comment", COLUMN_COMMENT = "comment";
+
+
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -75,6 +79,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 COLUMN_DATE_FINISH + " text, " +
                 COLUMN_PERCENT_DATE + " real)";
         db.execSQL(command_five);
+
+        String command_six = "create table " + TABLE_COMMENTS + "(" +
+                COLUMN_UID_COMMENT + " text, " +
+                COLUMN_COMMENT + " text)";
+        db.execSQL(command_six);
     }
 
     @Override
@@ -94,6 +103,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
             String command_five = "drop table if exists " + TABLE_CALCULATION_INFO;
             db.execSQL(command_five);
+
+            String command_six = "drop table if exists " + TABLE_COMMENTS;
+            db.execSQL(command_six);
 
             onCreate(db);
         }
