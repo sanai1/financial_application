@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Financial_application"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,11 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.financial_application.GoalActivity" />
-        <activity android:name="com.example.financial_application.HistoryActivity" />
-        <activity android:name="com.example.financial_application.ReportActivity" />
-        <activity android:name="com.example.financial_application.CategoryActivity" />
-        <activity android:name="com.example.financial_application.FeedbackActivity" />
+        <activity android:name="com.example.financial_application.activity.GoalActivity" />
+        <activity android:name="com.example.financial_application.activity.HistoryActivity" />
+        <activity android:name="com.example.financial_application.activity.ReportActivity" />
+        <activity android:name="com.example.financial_application.activity.CategoryActivity" />
+        <activity android:name="com.example.financial_application.activity.FeedbackActivity" />
     </application>
 
 </manifest>

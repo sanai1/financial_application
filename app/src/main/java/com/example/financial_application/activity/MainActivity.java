@@ -1,4 +1,4 @@
-package com.example.financial_application;
+package com.example.financial_application.activity;
 
 
 import android.app.DatePickerDialog;
@@ -18,6 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 
+import com.example.financial_application.dialog_fragment.CategoryDialog;
+import com.example.financial_application.DBHelper;
+import com.example.financial_application.R;
 import com.example.financial_application.databinding.ActivityMainBinding;
 import com.example.financial_application.databinding.AddCategoryBinding;
 import com.google.android.material.navigation.NavigationView;
@@ -175,7 +178,6 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         ContentValues contentValues = new ContentValues();
 
         UUID uuid = UUID.randomUUID();
-        System.out.println(uuid);
         contentValues.put(DBHelper.COLUMN_CATEGORY_ID, String.valueOf(uuid));
         contentValues.put(DBHelper.COLUMN_EXPENSE, expense);
         contentValues.put(DBHelper.COLUMN_CATEGORY_T_C, name_category);
@@ -261,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
             contentValues.put(DBHelper.COLUMN_SUMMA, sum);
 
             String year = String.valueOf(calendar.get(Calendar.YEAR));
-            String month = String.valueOf(calendar.get(Calendar.MONTH));
+            String month = String.valueOf(calendar.get(Calendar.MONTH)+1);
             String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
             if (month.length() == 1) {
                 month = "0" + month;
@@ -269,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
             if (day.length() == 1) {
                 day = "0" + day;
             }
+            // TODO: сделать "обнуление" даты после сохранения транзакции
             contentValues.put(DBHelper.COLUMN_ADD_DATA, day + "." + month + "." + year);
             String uid = UUID.randomUUID().toString();
             contentValues.put(DBHelper.COLUMN_UID, uid);
@@ -282,6 +285,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
 
             binding_activity_main.editTextNumberSum.setText("");
             binding_activity_main.checkBoxBidPurchase.setChecked(false);
+            binding_activity_main.editTextComment.setText("");
             Toast.makeText(this, "Запись сохранена", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Проверьте введеные данные", Toast.LENGTH_SHORT).show();

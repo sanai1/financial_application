@@ -1,4 +1,4 @@
-package com.example.financial_application;
+package com.example.financial_application.activity;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 
+import com.example.financial_application.DBHelper;
+import com.example.financial_application.R;
 import com.example.financial_application.databinding.ActivityGoalBinding;
 import com.example.financial_application.databinding.ActivityGoalStartBinding;
 import com.github.mikephil.charting.charts.LineChart;

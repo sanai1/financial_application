@@ -1,5 +1,6 @@
-package com.example.financial_application;
+package com.example.financial_application.adapter_state;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +9,22 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.financial_application.R;
+
 import java.util.List;
 
 public class HistoryStateAdapter extends RecyclerView.Adapter<HistoryStateAdapter.ViewHolder> {
+    public interface OnStateClickListenerHistory{
+        void onStateClickHistory(HistoryState historyState, int position);
+    }
     private final List<HistoryState> historyStateList;
+    private final LayoutInflater inflater;
+    private final OnStateClickListenerHistory onClickListenerHistory;
 
-    public HistoryStateAdapter(List<HistoryState> historyStateList) {
+    public HistoryStateAdapter(List<HistoryState> historyStateList, Context context, OnStateClickListenerHistory onStateClickListenerHistory) {
         this.historyStateList = historyStateList;
+        this.inflater = LayoutInflater.from(context);
+        this.onClickListenerHistory = onStateClickListenerHistory;
     }
 
     @Override
@@ -27,6 +37,7 @@ public class HistoryStateAdapter extends RecyclerView.Adapter<HistoryStateAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.update(historyStateList.get(position));
+        holder.click(position);
     }
 
     @Override
@@ -42,7 +53,15 @@ public class HistoryStateAdapter extends RecyclerView.Adapter<HistoryStateAdapte
             textViewDate = itemView.findViewById(R.id.textViewDateHistory);
             textViewNameCategory = itemView.findViewById(R.id.textViewNameCategoryHistory);
             textViewSumma = itemView.findViewById(R.id.textViewSumCategoryHistory);
+        }
 
+        public void click(int position) {
+            textViewNameCategory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickListenerHistory.onStateClickHistory(historyStateList.get(position), position);
+                }
+            });
         }
 
         public void update(HistoryState historyState) {

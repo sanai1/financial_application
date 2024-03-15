@@ -1,4 +1,4 @@
-package com.example.financial_application;
+package com.example.financial_application.activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 
+import com.example.financial_application.R;
 import com.example.financial_application.databinding.ActivityFeedbackBinding;
 import com.google.android.material.navigation.NavigationView;
 

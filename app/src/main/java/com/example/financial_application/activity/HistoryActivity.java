@@ -1,4 +1,4 @@
-package com.example.financial_application;
+package com.example.financial_application.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,6 +14,10 @@ import androidx.core.view.GravityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.financial_application.DBHelper;
+import com.example.financial_application.adapter_state.HistoryState;
+import com.example.financial_application.adapter_state.HistoryStateAdapter;
+import com.example.financial_application.R;
 import com.example.financial_application.databinding.ActivityHistoryBinding;
 import com.google.android.material.navigation.NavigationView;
 
@@ -96,8 +100,15 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void update_view() {
+        HistoryStateAdapter.OnStateClickListenerHistory stateClickListenerHistory = new HistoryStateAdapter.OnStateClickListenerHistory() {
+            @Override
+            public void onStateClickHistory(HistoryState historyState, int position) {
+                Toast.makeText(HistoryActivity.this, historyState.getComment(), Toast.LENGTH_SHORT).show();
+            }
+        };
         String command = "select " + DBHelper.COLUMN_IS_EXPENSE + ", " + DBHelper.COLUMN_IS_BIG_PURCHASE + ", " +
-                DBHelper.COLUMN_SUMMA + ", " + DBHelper.COLUMN_ADD_DATA + ", " + DBHelper.COLUMN_CATEGORY_UID + " from " + DBHelper.TABLE_HISTORY;
+                DBHelper.COLUMN_SUMMA + ", " + DBHelper.COLUMN_ADD_DATA + ", " + DBHelper.COLUMN_CATEGORY_UID + ", " +
+                DBHelper.COLUMN_UID + " from " + DBHelper.TABLE_HISTORY;
         // TODO: сделать сортировку записей истории (от самой последней к самой старой записи)
         Cursor cursor = database.rawQuery(command, null);
 
@@ -110,22 +121,29 @@ public class HistoryActivity extends AppCompatActivity {
         }
         cursor_get_category.close();
 
-        String name;
+        String name, command_comments;
         while (cursor.moveToNext()) {
             int[] color = {76, 175, 80};
             name = hashMapCategory.get(cursor.getString(4));
-
+            command_comments = "select " + DBHelper.COLUMN_COMMENT + " from " + DBHelper.TABLE_COMMENTS + " where " + DBHelper.COLUMN_UID_COMMENT + " = '" + cursor.getString(5) + "'";
+            Cursor cursor_comment = database.rawQuery(command_comments, null);
+            cursor_comment.moveToNext();
+            String comment = cursor_comment.getString(0);
+            cursor_comment.close();
+            if (comment.length() == 0) {
+                comment = "нет комментария";
+            }
             if (cursor.getInt(0) == 1) {
-                historyStateList.add(new HistoryState(cursor.getString(3), name, cursor.getString(2), cursor.getInt(0), cursor.getInt(1)));
+                historyStateList.add(new HistoryState(cursor.getString(3), name, cursor.getString(2), cursor.getInt(0), cursor.getInt(1), comment));
             } else {
-                historyStateList.add(new HistoryState(cursor.getString(3), name, cursor.getString(2), cursor.getInt(0), cursor.getInt(1), color));
+                historyStateList.add(new HistoryState(cursor.getString(3), name, cursor.getString(2), cursor.getInt(0), cursor.getInt(1), comment, color));
             }
         }
         cursor.close();
         Collections.reverse(historyStateList);
         // TODO: при наличии 1 категории, она не удаляется при переключении расход/доход
         if (historyStateList.size() > 0) {
-            stateAdapter = new HistoryStateAdapter(historyStateList);
+            stateAdapter = new HistoryStateAdapter(historyStateList, this, stateClickListenerHistory);
             binding_activity_history.historyList.setAdapter(stateAdapter);
             binding_activity_history.historyList.setLayoutManager(layoutManager);
         }

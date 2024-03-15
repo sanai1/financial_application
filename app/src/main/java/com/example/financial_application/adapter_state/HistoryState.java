@@ -1,4 +1,4 @@
-package com.example.financial_application;
+package com.example.financial_application.adapter_state;
 
 public class HistoryState {
     private String date;
@@ -6,9 +6,10 @@ public class HistoryState {
     private String summa;
     private int is_expense;
     private int is_big_purchase;
+    private String comment;
     private int[] color = {244, 67, 54};
 
-    public HistoryState(String date, String name, String summa, int is_expense, int is_big_purchase) {
+    public HistoryState(String date, String name, String summa, int is_expense, int is_big_purchase, String comment) {
         this.date = date;
         if (name.length() > 10) {
             this.name = name.substring(0, 9) + "...";
@@ -18,15 +19,21 @@ public class HistoryState {
         this.summa = summa;
         this.is_expense = is_expense;
         this.is_big_purchase = is_big_purchase;
+        this.comment = comment;
     }
 
-    public HistoryState(String date, String name, String summa, int is_expense, int is_big_purchase, int[] color) {
+    public HistoryState(String date, String name, String summa, int is_expense, int is_big_purchase, String comment, int[] color) {
         this.date = date;
         this.name = name;
         this.summa = summa;
         this.is_expense = is_expense;
         this.is_big_purchase = is_big_purchase;
+        this.comment = comment;
         this.color = color;
+    }
+
+    public String getComment() {
+        return comment;
     }
 
     public int[] getColor() {
