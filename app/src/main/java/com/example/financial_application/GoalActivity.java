@@ -29,6 +29,7 @@ import com.google.android.material.navigation.NavigationView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -41,7 +42,6 @@ public class GoalActivity extends AppCompatActivity {
     private boolean first_version_goal = true;
     private Integer number_start_sum = null;
     private LineChart lineChart;
-    private List<String> stringList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -58,12 +58,10 @@ public class GoalActivity extends AppCompatActivity {
 
         if (start_activity) {
             create_menu_start();
+            binding_activity_goal_start.textViewInfoUpdateGoal.setText("");
         } else {
             create_menu();
         }
-
-        lineChart = findViewById(R.id.line_chart);
-        stringList = new ArrayList<>();
     }
 
     protected void onStart() {
@@ -148,28 +146,28 @@ public class GoalActivity extends AppCompatActivity {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                String command_calculation_info = "select * from " + DBHelper.TABLE_CALCULATION_INFO;
-                Cursor cursor = database.rawQuery(command_calculation_info, null);
-                String percent = null;
-                if(cursor.moveToLast()) {
-                    String text_add_date = cursor.getString(2);
-                    binding_activity_goal.textViewDate.setText("Дата достижения цели: " + text_add_date);
-                    String text_ps = "около " + cursor.getInt(1) + " месяцев (по рассчету на " + cursor.getString(0) + ")";
-                    binding_activity_goal.textViewPS.setText(text_ps);
-                    percent = cursor.getString(3);
-                    if (percent != null) {
-                        binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: " + percent + "%");
+                if (!start_activity) {
+                    String command_calculation_info = "select * from " + DBHelper.TABLE_CALCULATION_INFO;
+                    Cursor cursor = database.rawQuery(command_calculation_info, null);
+                    String percent;
+                    Thread thread;
+                    if (cursor.moveToLast()) {
+                        String text_add_date = cursor.getString(2);
+                        binding_activity_goal.textViewDate.setText("Дата достижения цели: " + text_add_date);
+                        String text_ps = "около " + cursor.getInt(1) + " месяцев (по рассчету на " + cursor.getString(0) + ")";
+                        binding_activity_goal.textViewPS.setText(text_ps);
+                        percent = cursor.getString(3);
+                        if (percent != null) {
+                            binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: " + percent + "%");
+                        }
+                        List<Double> doubleList = getCoefficients();
+                        thread = getThreadUpdate(cursor.getInt(1), doubleList.get(0), doubleList.get(1), doubleList.get(2));
+                    } else {
+                        thread = getThread();
                     }
+                    cursor.close();
+                    thread.start();
                 }
-                cursor.close();
-
-                String command = "select " + DBHelper.COLUMN_START_CAPITAL + " from " + DBHelper.TABLE_GOAL;
-                Cursor cursor_goal = database.rawQuery(command, null);
-                cursor_goal.moveToNext();
-                Double summa = Double.valueOf(cursor_goal.getString(0));
-                cursor_goal.close();
-
-                make_chart_start(summa);
             }
         };
         Thread thread = new Thread(runnable);
@@ -194,12 +192,13 @@ public class GoalActivity extends AppCompatActivity {
         }
         return percent;
     }
-    public void calculation(View view) {
+
+    private List<Double> getCoefficients() {
+        List<Double> doubleList = new ArrayList<>();
         String command = "select  t.*," +
                 "t.dohod - t.rash as delta " +
                 "from ( " +
                 "SELECT " +
-//                "sum((case when " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 1 and " + DBHelper.COLUMN_IS_EXPENSE + " = 1 then " + DBHelper.COLUMN_SUMMA_GOAL + " else 0 end)) as rash_kp, " +
                 "sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 1 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA_GOAL + " else 0 end)) as rash, " +
                 "sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 0 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA_GOAL + " else 0 end)) as dohod, " +
                 "substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7) as my " +
@@ -216,27 +215,11 @@ public class GoalActivity extends AppCompatActivity {
         cursor.close();
 
         String command_capital = "select * from " + DBHelper.TABLE_CAPITAL;
-        String command_goal_sum = "select * from " + DBHelper.TABLE_GOAL;
-
         Cursor cursor_capital = database.rawQuery(command_capital, null);
-        Cursor cursor_goal_sum = database.rawQuery(command_goal_sum, null);
         cursor_capital.moveToLast();
-        cursor_goal_sum.moveToNext();
-
         double capital_now = cursor_capital.getDouble(1);
-        double sum_capital = capital_now;
-        double goal_sum = cursor_goal_sum.getDouble(1);
         cursor_capital.close();
-        cursor_goal_sum.close();
 
-        if (mas.size() < 2) {
-            binding_activity_goal.textViewDate.setText(R.string.little_information);
-            binding_activity_goal.textViewPS.setText("");
-
-            String percent = get_percent(capital_now, goal_sum);
-            binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: " + percent + "%");
-            return;
-        }
         double x_sum = 0, y_sum = 0, x2_sum = 0, xy_sum = 0, n = mas.size();
         for(int i = 0; i < n; i++) {
             x_sum += i+1;
@@ -247,6 +230,36 @@ public class GoalActivity extends AppCompatActivity {
         double k, b;
         k = (n * xy_sum  -  x_sum * y_sum) / (n * x2_sum  -  x_sum * x_sum);
         b = (y_sum  -  k * x_sum) / n;
+
+        doubleList.add(k);
+        doubleList.add(b);
+        doubleList.add(capital_now);
+        doubleList.add((double) mas.size());
+        return doubleList;
+    }
+
+    public void calculation(View view) {
+        List<Double> doubleList = getCoefficients();
+        double k = doubleList.get(0), b = doubleList.get(1);
+        double capital_now = doubleList.get(2);
+        double mas_size = doubleList.get(3);
+
+        String command_goal_sum = "select * from " + DBHelper.TABLE_GOAL;
+        Cursor cursor_goal_sum = database.rawQuery(command_goal_sum, null);
+        cursor_goal_sum.moveToNext();
+
+        double sum_capital = capital_now;
+        double goal_sum = cursor_goal_sum.getDouble(1);
+        cursor_goal_sum.close();
+
+        if (mas_size < 2) {
+            binding_activity_goal.textViewDate.setText(R.string.little_information);
+            binding_activity_goal.textViewPS.setText("");
+
+            String percent = get_percent(capital_now, goal_sum);
+            binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: " + percent + "%");
+            return;
+        }
 
         int cnt_month = 0;
         String text_goal = "К сожалению для достижения вашей цели понадобиться более 50 лет";
@@ -301,7 +314,8 @@ public class GoalActivity extends AppCompatActivity {
         contentValues.put(DBHelper.COLUMN_PERCENT_DATE, percent);
         database.insert(DBHelper.TABLE_CALCULATION_INFO, null, contentValues);
 
-        make_chart();
+        Thread thread = getThreadUpdate(cnt_month, k, b, capital_now);
+        thread.start();
     }
 
     private void make_chart_start(Double summa) {
@@ -311,6 +325,7 @@ public class GoalActivity extends AppCompatActivity {
 
         lineChart.setDescription(description);
         lineChart.getAxisRight().setDrawLabels(false);
+        List<String> stringList = new ArrayList<>();
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM");
         Double now_date = Double.valueOf(format.format(Calendar.getInstance().getTime())), fan_date = now_date;
@@ -331,10 +346,10 @@ public class GoalActivity extends AppCompatActivity {
         }
 
         XAxis xAxis = lineChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM); //TODO
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(stringList));
         xAxis.setLabelCount(6);
-        xAxis.setGranularity(1f); //TODO
+        xAxis.setGranularity(1f);
 
         YAxis yAxis = lineChart.getAxisLeft();
         double min_sum = summa/2;
@@ -359,7 +374,58 @@ public class GoalActivity extends AppCompatActivity {
         lineChart.invalidate();
     }
 
-    private void make_chart() {
+    @NonNull
+    private Thread getThreadUpdate(int count_month, double k, double b, double capital_now) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                // индексы подписанных точек на оси X
+                int[] indx = new int[6];
+                indx[0] = 0;
+                indx[5] = count_month;
+                for (int i = 1;i < 5; i++) {
+                    indx[i] = (count_month/5)*i;
+                }
+
+                // заполняем массив значениями оси X
+                SimpleDateFormat format = new SimpleDateFormat("MM.yyyy");
+                Double now_date = Double.valueOf(format.format(Calendar.getInstance().getTime())), fan_date = now_date;
+                List<String> stringList = new ArrayList<>();
+
+                String str;
+                for (int i = 1; i < count_month; i++) {
+                    if ((fan_date - fan_date % 1) != 12) {
+                        fan_date += 1;
+                    } else {
+                        fan_date += 0.0001;
+                        fan_date -= 11;
+                    }
+
+                    if ((fan_date - fan_date%1) < 10) {
+                        str = "0" + String.valueOf(fan_date).substring(0, 6);;
+                    } else {
+                        str = String.valueOf(fan_date).substring(0, 7);
+                    }
+
+                    stringList.add(str);
+                }
+
+                // заполняем массив значениями оси Y
+                List<Double> doubleArrayList = new ArrayList<>();
+                double sum_now = capital_now;
+                for (int i = 1; i < count_month; i++) {
+                    sum_now += k*i + b;
+                    doubleArrayList.add(sum_now);
+                }
+
+                make_chart(stringList, doubleArrayList);
+            }
+        };
+        Thread thread = new Thread(runnable);
+        return thread;
+    }
+
+    private void make_chart(List<String> stringList, List<Double> doubleArrayList) {
         Description description = new Description();
         description.setText("");
         description.setPosition(150f, 15f);
@@ -370,29 +436,29 @@ public class GoalActivity extends AppCompatActivity {
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(stringList));
-        xAxis.setLabelCount(4);
+        xAxis.setLabelCount(stringList.size());
         xAxis.setGranularity(1f);
 
         YAxis yAxis = lineChart.getAxisLeft();
-        yAxis.setAxisMinimum(0f);
-        yAxis.setAxisMaximum(100f);
+        double sum_min = Collections.min(doubleArrayList);
+        double sum_max = Collections.max(doubleArrayList);
+        yAxis.setAxisMinimum((float) (sum_min - sum_min/2));
+        yAxis.setAxisMaximum((float)(sum_max + sum_min/2));
         yAxis.setAxisLineWidth(2f);
         yAxis.setAxisLineColor(Color.BLACK);
         yAxis.setLabelCount(10);
 
         List<Entry> entryList = new ArrayList<>();
-        entryList.add(new Entry(0, 10f));
-        entryList.add(new Entry(1, 12f));
-        entryList.add(new Entry(2, 17f));
-        entryList.add(new Entry(3, 14f));
+        for (int i = 0; i < doubleArrayList.size(); i++) {
+            entryList.add(new Entry(i, (int) (doubleArrayList.get(i) - doubleArrayList.get(i) % 1)));
+        }
 
-        LineDataSet dataSet = new LineDataSet(entryList, "Matematika");
+        LineDataSet dataSet = new LineDataSet(entryList, "капитал");
         dataSet.setColor(Color.BLUE);
 
         LineData lineData = new LineData(dataSet);
         lineChart.setData(lineData);
         lineChart.invalidate();
-
     }
 
     public void name_goal(View view) {
@@ -425,9 +491,8 @@ public class GoalActivity extends AppCompatActivity {
     }
 
     private void create_menu_start() {
-        setContentView(R.layout.activity_goal_start);
         setContentView(binding_activity_goal_start.getRoot());
-
+        lineChart = findViewById(R.id.line_chart);
         binding_activity_goal_start.goalNavigationMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -467,8 +532,8 @@ public class GoalActivity extends AppCompatActivity {
     }
 
     private void create_menu() {
-        setContentView(R.layout.activity_goal);
         setContentView(binding_activity_goal.getRoot());
+        lineChart = findViewById(R.id.line_chart);
 
         String command_info = "select * from " + DBHelper.TABLE_GOAL;
         Cursor cursor_info = database.rawQuery(command_info, null);
@@ -551,69 +616,78 @@ public class GoalActivity extends AppCompatActivity {
             binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: не рассчитан");
             binding_activity_goal.textViewDate.setText("Дата достижения цели: не рассчитана");
             binding_activity_goal.textViewPS.setText("");
-            return;
-        }
-        first_version_goal = false;
-        boolean is_exception = false;
-        Integer number_sum = null, number_percent = null, number_inflation;
-        try {
-            number_sum = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberSum.getText()));
-            number_start_sum = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberStartSum.getText()));
-            number_percent = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberPercent.getText()));
-        } catch (Exception ise) {
-            Toast.makeText(this, "Проверьте введенные данные", Toast.LENGTH_SHORT).show();
-            is_exception = true;
-        }
-
-        String name_goal = binding_activity_goal_start.editTextTextName.getText().toString();
-        if (!is_exception && name_goal.length() != 0) {
+        } else {
+            first_version_goal = false;
+            boolean is_exception = false;
+            Integer number_sum = null, number_percent = null, number_inflation;
             try {
-                number_inflation = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberInflation.getText()));
+                number_sum = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberSum.getText()));
+                number_start_sum = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberStartSum.getText()));
+                number_percent = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberPercent.getText()));
             } catch (Exception ise) {
-                number_inflation = 5;
+                Toast.makeText(this, "Проверьте введенные данные", Toast.LENGTH_SHORT).show();
+                is_exception = true;
             }
 
-            SQLiteDatabase database = dbHelper.getWritableDatabase();
-            ContentValues contentValues = new ContentValues();
-            ContentValues contentValues_capital = new ContentValues();
-
-            Calendar calendar = new GregorianCalendar();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM");
-            double date_now = Double.valueOf(simpleDateFormat.format(calendar.getTime()));
-            if (date_now % 1 != 0.01) {
-                date_now -= 0.01;
-            } else {
-                date_now = date_now - 1 + 0.11;
-            }
-
-            contentValues.put(DBHelper.COLUMN_NAME, name_goal);
-            contentValues.put(DBHelper.COLUMN_SUMMA_GOAL, number_sum);
-            contentValues.put(DBHelper.COLUMN_START_CAPITAL, number_start_sum);
-            contentValues.put(DBHelper.COLUMN_PERCENT, number_percent);
-            contentValues.put(DBHelper.COLUMN_INFLATION, number_inflation);
-            contentValues.put(DBHelper.COLUMN_GOAL_UID, 1);
-
-            contentValues_capital.put(DBHelper.COLUMN_MONTH, String.valueOf(date_now));
-            contentValues_capital.put(DBHelper.COLUMN_CAPITAL_SUM, number_start_sum);
-            contentValues_capital.put(DBHelper.COLUMN_UID_CAPITAL, 1);
-
-            database.insert(DBHelper.TABLE_GOAL, null, contentValues);
-            database.insert(DBHelper.TABLE_CAPITAL, null, contentValues_capital);
-
-            Toast.makeText(this, "Цель добавлена", Toast.LENGTH_SHORT).show();
-
-            create_menu();
-
-
-            // TODO: по нажатию на кнопку необходимо перестраивать график (линейный, без доп данных)
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    //make_chart_start(Double.valueOf(number_start_sum));
+            String name_goal = binding_activity_goal_start.editTextTextName.getText().toString();
+            if (!is_exception && name_goal.length() != 0) {
+                try {
+                    number_inflation = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberInflation.getText()));
+                } catch (Exception ise) {
+                    number_inflation = 5;
                 }
-            };
-            Thread thread = new Thread(runnable);
-            thread.start();
+
+                SQLiteDatabase database = dbHelper.getWritableDatabase();
+                ContentValues contentValues = new ContentValues();
+                ContentValues contentValues_capital = new ContentValues();
+
+                Calendar calendar = new GregorianCalendar();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM");
+                double date_now = Double.valueOf(simpleDateFormat.format(calendar.getTime()));
+                if (date_now % 1 != 0.01) {
+                    date_now -= 0.01;
+                } else {
+                    date_now = date_now - 1 + 0.11;
+                }
+
+                contentValues.put(DBHelper.COLUMN_NAME, name_goal);
+                contentValues.put(DBHelper.COLUMN_SUMMA_GOAL, number_sum);
+                contentValues.put(DBHelper.COLUMN_START_CAPITAL, number_start_sum);
+                contentValues.put(DBHelper.COLUMN_PERCENT, number_percent);
+                contentValues.put(DBHelper.COLUMN_INFLATION, number_inflation);
+                contentValues.put(DBHelper.COLUMN_GOAL_UID, 1);
+
+                contentValues_capital.put(DBHelper.COLUMN_MONTH, String.valueOf(date_now));
+                contentValues_capital.put(DBHelper.COLUMN_CAPITAL_SUM, number_start_sum);
+                contentValues_capital.put(DBHelper.COLUMN_UID_CAPITAL, 1);
+
+                database.insert(DBHelper.TABLE_GOAL, null, contentValues);
+                database.insert(DBHelper.TABLE_CAPITAL, null, contentValues_capital);
+
+                Toast.makeText(this, "Цель добавлена", Toast.LENGTH_SHORT).show();
+
+                create_menu();
+            }
         }
+        Thread thread = getThread();
+        thread.start();
+    }
+
+    @NonNull
+    private Thread getThread() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                String command = "select " + DBHelper.COLUMN_START_CAPITAL + " from " + DBHelper.TABLE_GOAL;
+                Cursor cursor_goal = database.rawQuery(command, null);
+                cursor_goal.moveToNext();
+                Double summa = Double.valueOf(cursor_goal.getString(0));
+                cursor_goal.close();
+
+                make_chart_start(summa);
+            }
+        };
+        Thread thread = new Thread(runnable);
+        return thread;
     }
 }
