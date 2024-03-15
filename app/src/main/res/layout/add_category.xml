@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:background="@color/light_cyan">
 
     <Button
         android:id="@+id/buttonAddAddCategory"
@@ -14,7 +14,9 @@
         android:layout_marginTop="150dp"
         android:layout_marginEnd="150dp"
         android:layout_marginBottom="20dp"
-        android:text="ДОБАВИТЬ"
+        android:text="добавить"
+        android:textSize="25dp"
+        android:backgroundTint="@color/light_purple"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +29,8 @@
         android:layout_marginTop="25dp"
         android:layout_marginStart="100dp"
         android:layout_marginEnd="100dp"
-        android:hint="Название категории"
+        android:hint="название категории"
+        android:textSize="25dp"
         android:ems="10"
         android:inputType="text"
         android:gravity="center"
@@ -49,13 +52,15 @@
             android:id="@+id/radioButtonExpense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="РАСХОД" />
+            android:textSize="25dp"
+            android:text="расход" />
 
         <RadioButton
             android:id="@+id/radioButtonIncome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ДОХОД" />
+            android:textSize="25dp"
+            android:text="доход" />
     </RadioGroup>
 
 

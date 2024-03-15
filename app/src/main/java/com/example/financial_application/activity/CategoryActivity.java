@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -148,6 +149,8 @@ public class CategoryActivity extends AppCompatActivity implements CategoryDialo
     public void btn_expense_category(View view) {
         binding_activity_category.buttonExpenseCategory.setEnabled(false);
         binding_activity_category.buttonIncomeCategory.setEnabled(true);
+        binding_activity_category.buttonExpenseCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.mint));
+        binding_activity_category.buttonIncomeCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.light_green));
         expenseButton = true;
         update_view(expenseButton);
     }
@@ -155,6 +158,8 @@ public class CategoryActivity extends AppCompatActivity implements CategoryDialo
     public void btn_income_category(View view) {
         binding_activity_category.buttonExpenseCategory.setEnabled(true);
         binding_activity_category.buttonIncomeCategory.setEnabled(false);
+        binding_activity_category.buttonExpenseCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.mint));
+        binding_activity_category.buttonIncomeCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.light_green));
         expenseButton = false;
         update_view(expenseButton);
     }

@@ -16,13 +16,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 
-import com.example.financial_application.dialog_fragment.CategoryDialog;
 import com.example.financial_application.DBHelper;
 import com.example.financial_application.R;
 import com.example.financial_application.databinding.ActivityMainBinding;
 import com.example.financial_application.databinding.AddCategoryBinding;
+import com.example.financial_application.dialog_fragment.CategoryDialog;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Calendar;
@@ -142,6 +143,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
     public void income(View view) {
         binding_activity_main.buttonIncome.setEnabled(false);
         binding_activity_main.buttonExpense.setEnabled(true);
+        binding_activity_main.buttonIncome.setBackgroundColor(ContextCompat.getColor(this, R.color.light_green));
+        binding_activity_main.buttonExpense.setBackgroundColor(ContextCompat.getColor(this, R.color.mint));
         binding_activity_main.checkBoxBidPurchase.setChecked(false);
         binding_activity_main.checkBoxBidPurchase.setText("разовый доход");
         expense_main = false;
@@ -157,6 +160,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         binding_activity_main.buttonIncome.setEnabled(true);
         binding_activity_main.checkBoxBidPurchase.setEnabled(true);
         binding_activity_main.checkBoxBidPurchase.setChecked(false);
+        binding_activity_main.buttonIncome.setBackgroundColor(ContextCompat.getColor(this, R.color.mint));
+        binding_activity_main.buttonExpense.setBackgroundColor(ContextCompat.getColor(this, R.color.light_green));
         binding_activity_main.checkBoxBidPurchase.setText("крупная покупка");
         binding_activity_main.buttonExpense.setEnabled(false);
         expense_main = true;

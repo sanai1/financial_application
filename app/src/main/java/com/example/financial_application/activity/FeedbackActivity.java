@@ -47,7 +47,7 @@ public class FeedbackActivity extends AppCompatActivity {
                 } else if (id == R.id.nav_report) {
                     binding_activity_feedback.drawerLayout.close();
                     Toast.makeText(FeedbackActivity.this, "Отчет", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(FeedbackActivity.this, FeedbackActivity.class);
+                    Intent intent = new Intent(FeedbackActivity.this, ReportActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_categories) {
                     binding_activity_feedback.drawerLayout.close();

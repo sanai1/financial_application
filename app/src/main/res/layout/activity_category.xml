@@ -15,13 +15,19 @@
             android:id="@+id/include3"
             layout="@layout/main" />
 
+        <include
+            layout="@layout/bottom_color"/>
+
         <Button
             android:id="@+id/buttonAddCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="add_category_in_category"
+            android:backgroundTint="@color/purple"
+            android:layout_marginTop="175dp"
             android:text="добавить категорию"
             android:textSize="25dp"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -34,7 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="150dp"
+            android:backgroundTint="@color/light_green"
             android:text="расход"
             android:textSize="25dp"
             android:enabled="false"
@@ -46,7 +53,8 @@
             android:id="@+id/buttonIncomeCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="150dp"
+            android:backgroundTint="@color/mint"
             android:text="доход"
             android:textSize="25dp"
             android:onClick="btn_income_category"
@@ -72,6 +80,7 @@
             android:layout_marginTop="35dp"
             android:text="Категории"
             android:textSize="25dp"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.747"
             app:layout_constraintStart_toStartOf="parent"
