@@ -41,6 +41,8 @@ public class HistoryActivity extends AppCompatActivity {
         binding_activity_history = ActivityHistoryBinding.inflate(getLayoutInflater());
         setContentView(binding_activity_history.getRoot());
 
+        binding_activity_history.includeMenu.textViewInfo.setText("История");
+
         dbHelper = new DBHelper(this);
         database = dbHelper.getWritableDatabase();
 

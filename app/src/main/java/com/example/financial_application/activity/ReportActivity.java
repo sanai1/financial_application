@@ -25,6 +25,8 @@ public class ReportActivity extends AppCompatActivity {
         binding_activity_report = ActivityReportBinding.inflate(getLayoutInflater());
         setContentView(binding_activity_report.getRoot());
 
+        binding_activity_report.includeMenu.textViewInfo.setText("Отчет");
+
         binding_activity_report.reportNavigationMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

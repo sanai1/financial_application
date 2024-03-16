@@ -51,6 +51,9 @@ public class GoalActivity extends AppCompatActivity {
         binding_activity_goal_start = ActivityGoalStartBinding.inflate(getLayoutInflater());
         binding_activity_goal = ActivityGoalBinding.inflate(getLayoutInflater());
 
+        binding_activity_goal_start.includeMenu.textViewInfo.setText("Цель");
+        binding_activity_goal.includeMenuGoal.textViewInfo.setText("Цель");
+
         dbHelper = new DBHelper(this);
         database = dbHelper.getWritableDatabase();
         String command_test = "select * from " + DBHelper.TABLE_GOAL;

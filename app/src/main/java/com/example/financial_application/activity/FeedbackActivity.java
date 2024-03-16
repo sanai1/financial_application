@@ -25,6 +25,8 @@ public class FeedbackActivity extends AppCompatActivity {
         binding_activity_feedback = ActivityFeedbackBinding.inflate(getLayoutInflater());
         setContentView(binding_activity_feedback.getRoot());
 
+        binding_activity_feedback.includeMenu.textViewInfo.setText("Обратная связь");
+
         binding_activity_feedback.reportNavigationMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

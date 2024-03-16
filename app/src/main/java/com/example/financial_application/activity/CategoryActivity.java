@@ -49,6 +49,8 @@ public class CategoryActivity extends AppCompatActivity implements CategoryDialo
         binding_activity_category = ActivityCategoryBinding.inflate(getLayoutInflater());
         setContentView(binding_activity_category.getRoot());
 
+        binding_activity_category.includeMenu.textViewInfo.setText("Категории");
+
         dbHelper = new DBHelper(this);
         database = dbHelper.getWritableDatabase();
 
@@ -149,8 +151,8 @@ public class CategoryActivity extends AppCompatActivity implements CategoryDialo
     public void btn_expense_category(View view) {
         binding_activity_category.buttonExpenseCategory.setEnabled(false);
         binding_activity_category.buttonIncomeCategory.setEnabled(true);
-        binding_activity_category.buttonExpenseCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.mint));
-        binding_activity_category.buttonIncomeCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.light_green));
+        binding_activity_category.buttonExpenseCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.light_sky_blue));
+        binding_activity_category.buttonIncomeCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.blue));
         expenseButton = true;
         update_view(expenseButton);
     }
@@ -158,8 +160,8 @@ public class CategoryActivity extends AppCompatActivity implements CategoryDialo
     public void btn_income_category(View view) {
         binding_activity_category.buttonExpenseCategory.setEnabled(true);
         binding_activity_category.buttonIncomeCategory.setEnabled(false);
-        binding_activity_category.buttonExpenseCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.mint));
-        binding_activity_category.buttonIncomeCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.light_green));
+        binding_activity_category.buttonExpenseCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.blue));
+        binding_activity_category.buttonIncomeCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.light_sky_blue));
         expenseButton = false;
         update_view(expenseButton);
     }

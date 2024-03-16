@@ -12,23 +12,10 @@
         android:layout_height="match_parent">
 
         <include
-            android:id="@+id/include2"
+            android:id="@+id/includeMenu"
             layout="@layout/main"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="-80dp" />
-
-        <TextView
-            android:id="@+id/textViewFeedback"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
-            android:text="Обратная связь"
-            android:textSize="25dp"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.799"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView2"
@@ -37,6 +24,7 @@
             android:layout_marginTop="25dp"
             android:text="Мы в telegram"
             android:textSize="25dp"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageButtonTelegram" />
@@ -50,7 +38,7 @@
             android:onClick="btn_telegram"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/include2"
+            app:layout_constraintTop_toTopOf="@+id/includeMenu"
             app:srcCompat="@mipmap/ic_telegram" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

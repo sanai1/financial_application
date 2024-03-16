@@ -10,22 +10,30 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:background="@color/light_blue">
 
-        <Button
+        <ImageView
             android:id="@+id/button_menu"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:onClick="menu"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            app:srcCompat="@mipmap/ic_menu_foreground" />
+
+        <TextView
+            android:id="@+id/textViewInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="25dp"
-            android:backgroundTint="@color/purple"
-            android:onClick="menu"
-            android:text="меню"
-            android:textColor="@color/white"
-            android:textSize="25dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="23dp"
+            android:layout_marginEnd="50dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="@color/black"
+            android:textSize="25dp" />
 
     </LinearLayout>
 

@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
 
         binding_activity_main = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding_activity_main.getRoot());
+
+        binding_activity_main.includeMenu.textViewInfo.setText("Капитал");
         binding_activity_main.navigatorViewId.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -143,8 +145,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
     public void income(View view) {
         binding_activity_main.buttonIncome.setEnabled(false);
         binding_activity_main.buttonExpense.setEnabled(true);
-        binding_activity_main.buttonIncome.setBackgroundColor(ContextCompat.getColor(this, R.color.light_green));
-        binding_activity_main.buttonExpense.setBackgroundColor(ContextCompat.getColor(this, R.color.mint));
+        binding_activity_main.buttonIncome.setBackgroundColor(ContextCompat.getColor(this, R.color.light_sky_blue));
+        binding_activity_main.buttonExpense.setBackgroundColor(ContextCompat.getColor(this, R.color.blue));
         binding_activity_main.checkBoxBidPurchase.setChecked(false);
         binding_activity_main.checkBoxBidPurchase.setText("разовый доход");
         expense_main = false;
@@ -160,8 +162,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         binding_activity_main.buttonIncome.setEnabled(true);
         binding_activity_main.checkBoxBidPurchase.setEnabled(true);
         binding_activity_main.checkBoxBidPurchase.setChecked(false);
-        binding_activity_main.buttonIncome.setBackgroundColor(ContextCompat.getColor(this, R.color.mint));
-        binding_activity_main.buttonExpense.setBackgroundColor(ContextCompat.getColor(this, R.color.light_green));
+        binding_activity_main.buttonIncome.setBackgroundColor(ContextCompat.getColor(this, R.color.blue));
+        binding_activity_main.buttonExpense.setBackgroundColor(ContextCompat.getColor(this, R.color.light_sky_blue));
         binding_activity_main.checkBoxBidPurchase.setText("крупная покупка");
         binding_activity_main.buttonExpense.setEnabled(false);
         expense_main = true;

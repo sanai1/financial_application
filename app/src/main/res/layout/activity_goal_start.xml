@@ -16,25 +16,13 @@
             layout="@layout/main" />
 
         <TextView
-            android:id="@+id/textViewHistory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
-            android:text="Цель"
-            android:textSize="25dp"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.747"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
             android:id="@+id/textViewCreateGoal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="125dp"
             android:text="создайте цель"
             android:textSize="40dp"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/includeMenu" />
@@ -111,7 +99,7 @@
             android:layout_marginTop="50dp"
             android:text="Сохранить"
             android:textSize="25dp"
-            android:backgroundTint="@color/mint"
+            android:backgroundTint="@color/purple"
             android:onClick="save_goal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

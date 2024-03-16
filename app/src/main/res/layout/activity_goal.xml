@@ -24,6 +24,7 @@
             android:layout_marginTop="110dp"
             android:text="Название цели: "
             android:textSize="20dp"
+            android:textColor="@color/black"
             android:onClick="name_goal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,6 +37,7 @@
             android:layout_marginTop="30dp"
             android:text="Сумма цели:"
             android:textSize="20dp"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewNameGoal" />
@@ -47,6 +49,7 @@
             android:layout_marginTop="30dp"
             android:text="Процент выполнения: не рассчитан"
             android:textSize="20dp"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewSumGoal" />
@@ -59,7 +62,7 @@
             android:onClick="calculation"
             android:text="рассчитать"
             android:textSize="25dp"
-            android:backgroundTint="@color/mint"
+            android:backgroundTint="@color/purple"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewNameGoal" />
@@ -71,6 +74,7 @@
             android:layout_marginTop="40dp"
             android:text="Дата достижения цели: не рассчитана"
             android:textSize="20dp"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
@@ -87,19 +91,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
-
-        <TextView
-            android:id="@+id/textViewHistory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
-            android:text="Цель"
-            android:textSize="25dp"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.747"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:layout_width="350dp"

@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <include
-            android:id="@+id/include2"
+            android:id="@+id/includeMenu"
             layout="@layout/main"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="-80dp" />
@@ -23,22 +23,9 @@
             android:layout_height="wrap_content"
             android:text="Скоро здесь появится кое-что интересное"
             android:textSize="17dp"
-            app:layout_constraintBottom_toBottomOf="@+id/include2"
-            app:layout_constraintEnd_toEndOf="@+id/include2"
-            app:layout_constraintStart_toStartOf="@+id/include2"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textViewHistory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
-            android:text="Отчет"
-            android:textSize="25dp"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.747"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/includeMenu"
+            app:layout_constraintEnd_toEndOf="@+id/includeMenu"
+            app:layout_constraintStart_toStartOf="@+id/includeMenu"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

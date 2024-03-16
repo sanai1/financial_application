@@ -52,19 +52,7 @@
             app:layout_constraintTop_toTopOf="@+id/include_menu"
             app:layout_constraintVertical_bias="0.946" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButtonAddCategory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="44dp"
-            android:backgroundTint="@color/cream"
-            android:clickable="true"
-            android:onClick="add_category_in_mainactivity"
-            app:layout_constraintBottom_toTopOf="@+id/editTextNumberSum"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/include_menu"
-            app:layout_constraintVertical_bias="0.792"
-            app:srcCompat="@android:drawable/ic_input_add" />
+
 
         <Spinner
             android:id="@+id/spinner"
@@ -100,7 +88,7 @@
             android:layout_marginStart="50dp"
             android:layout_marginTop="125dp"
             android:onClick="income"
-            android:backgroundTint="@color/mint"
+            android:backgroundTint="@color/blue"
             android:text="доход"
             android:textSize="25dp"
             app:layout_constraintStart_toEndOf="@+id/button_expense"
@@ -128,22 +116,9 @@
             android:layout_marginTop="125dp"
             android:enabled="false"
             android:onClick="expense"
-            android:backgroundTint="@color/light_green"
+            android:backgroundTint="@color/light_sky_blue"
             android:text="расход"
             android:textSize="25dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textViewHistory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
-            android:text="капитал"
-            android:textSize="25dp"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.747"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -163,6 +138,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/include_menu"
             app:layout_constraintVertical_bias="0.545" />
+
+        <ImageView
+            android:id="@+id/floatingActionButtonAddCategory"
+            android:layout_width="74dp"
+            android:layout_height="69dp"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="230dp"
+            android:clickable="true"
+            android:onClick="add_category_in_mainactivity"
+            app:layout_constraintBottom_toTopOf="@+id/editTextNumberSum"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/include_menu"
+            app:layout_constraintVertical_bias="0.144"
+            app:srcCompat="@mipmap/ic_plus_foreground" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
