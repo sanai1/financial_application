@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "351209746848",
+    "project_id": "financial-application-efc97",
+    "storage_bucket": "financial-application-efc97.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:351209746848:android:7b7c68c0cd3a2b2487b4c5",
+        "android_client_info": {
+          "package_name": "com.example.financial_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADMFrEz6veyb9x4FyoVSEuH_oNtZXDgCA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
