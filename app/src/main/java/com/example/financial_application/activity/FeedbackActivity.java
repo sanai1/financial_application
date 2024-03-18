@@ -71,7 +71,7 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     public void btn_telegram(View view) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/financial_assistant2024_bot"));
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/f_a_support_bot"));
         startActivity(intent);
     }
 }

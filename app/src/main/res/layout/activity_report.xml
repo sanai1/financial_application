@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:text="Скоро здесь появится кое-что интересное"
             android:textSize="17dp"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@+id/includeMenu"
             app:layout_constraintEnd_toEndOf="@+id/includeMenu"
             app:layout_constraintStart_toStartOf="@+id/includeMenu"

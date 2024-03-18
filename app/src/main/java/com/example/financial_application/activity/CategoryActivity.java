@@ -152,7 +152,9 @@ public class CategoryActivity extends AppCompatActivity implements CategoryDialo
         binding_activity_category.buttonExpenseCategory.setEnabled(false);
         binding_activity_category.buttonIncomeCategory.setEnabled(true);
         binding_activity_category.buttonExpenseCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.light_sky_blue));
+        binding_activity_category.buttonExpenseCategory.setTextColor(ContextCompat.getColor(this, R.color.gray));
         binding_activity_category.buttonIncomeCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.blue));
+        binding_activity_category.buttonIncomeCategory.setTextColor(ContextCompat.getColor(this, R.color.white));
         expenseButton = true;
         update_view(expenseButton);
     }
@@ -161,7 +163,9 @@ public class CategoryActivity extends AppCompatActivity implements CategoryDialo
         binding_activity_category.buttonExpenseCategory.setEnabled(true);
         binding_activity_category.buttonIncomeCategory.setEnabled(false);
         binding_activity_category.buttonExpenseCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.blue));
+        binding_activity_category.buttonExpenseCategory.setTextColor(ContextCompat.getColor(this, R.color.white));
         binding_activity_category.buttonIncomeCategory.setBackgroundColor(ContextCompat.getColor(this, R.color.light_sky_blue));
+        binding_activity_category.buttonIncomeCategory.setTextColor(ContextCompat.getColor(this, R.color.gray));
         expenseButton = false;
         update_view(expenseButton);
     }

@@ -16,7 +16,8 @@
         android:layout_marginBottom="20dp"
         android:text="добавить"
         android:textSize="25dp"
-        android:backgroundTint="@color/purple"
+        android:backgroundTint="@color/blue"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,6 +31,8 @@
         android:layout_marginStart="100dp"
         android:layout_marginEnd="100dp"
         android:hint="название категории"
+        android:textColorHint="@color/black"
+        android:textColor="@color/black"
         android:textSize="25dp"
         android:ems="10"
         android:inputType="text"
@@ -53,14 +56,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="25dp"
-            android:text="расход" />
+            android:text="расход"
+            android:textColor="@color/black"/>
 
         <RadioButton
             android:id="@+id/radioButtonIncome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="25dp"
-            android:text="доход" />
+            android:text="доход"
+            android:textColor="@color/black"/>
     </RadioGroup>
 
 

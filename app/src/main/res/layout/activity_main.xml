@@ -27,7 +27,7 @@
             android:layout_marginTop="765dp"
             android:layout_marginBottom="40dp"
             android:onClick="save_expense"
-            android:backgroundTint="@color/purple"
+            android:backgroundTint="@color/blue"
             android:text="сохранить"
             android:textSize="25dp"
             android:textColor="@color/white"
@@ -92,6 +92,7 @@
             android:onClick="income"
             android:backgroundTint="@color/blue"
             android:text="доход"
+            android:textColor="@color/white"
             android:textSize="25dp"
             app:layout_constraintStart_toEndOf="@+id/button_expense"
             app:layout_constraintTop_toTopOf="parent" />
@@ -121,6 +122,7 @@
             android:onClick="expense"
             android:backgroundTint="@color/light_sky_blue"
             android:text="расход"
+            android:textColor="@color/gray"
             android:textSize="25dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
