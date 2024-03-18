@@ -255,11 +255,11 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
             contentValues.put(DBHelper.COLUMN_CATEGORY_UID, cursorUid.getString(0));
             cursorUid.close();
 
-            if (expense_main) {
-                contentValues.put(DBHelper.COLUMN_IS_EXPENSE, 1);
-            } else {
-                contentValues.put(DBHelper.COLUMN_IS_EXPENSE, 0);
-            }
+//            if (expense_main) {
+//                contentValues.put(DBHelper.COLUMN_IS_EXPENSE, 1);
+//            } else {
+//                contentValues.put(DBHelper.COLUMN_IS_EXPENSE, 0);
+//            }
             if (binding_activity_main.checkBoxBidPurchase.isChecked()) {
                 contentValues.put(DBHelper.COLUMN_IS_BIG_PURCHASE, 1);
             } else {

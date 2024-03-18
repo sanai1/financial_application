@@ -14,7 +14,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public static final String TABLE_HISTORY = "history";
-    public static final String COLUMN_UID = "uid", COLUMN_IS_EXPENSE = "is_expense", COLUMN_IS_BIG_PURCHASE = "is_big_purchase",
+    public static final String COLUMN_UID = "uid", COLUMN_IS_BIG_PURCHASE = "is_big_purchase", // COLUMN_IS_EXPENSE = "is_expense",
             COLUMN_SUMMA = "summa",  COLUMN_ADD_DATA = "add_data", COLUMN_CATEGORY_UID = "category_uid";
 
 
@@ -45,7 +45,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String command_one = "create table " + TABLE_HISTORY + "(" +
                 COLUMN_UID + " text," +
-                COLUMN_IS_EXPENSE + " integer," +
+//                COLUMN_IS_EXPENSE + " integer," +
                 COLUMN_IS_BIG_PURCHASE + " integer," +
                 COLUMN_SUMMA + " real," +
                 COLUMN_ADD_DATA + " text," +

@@ -9,15 +9,17 @@
         android:id="@+id/textViewDateHistory"
         android:layout_width="75dp"
         android:layout_height="wrap_content"
-        android:textSize="15dp">
+        android:textSize="15dp"
+        android:textColor="@color/black">
     </TextView>
-.......................
+
     <TextView
         android:id="@+id/textViewNameCategoryHistory"
         android:layout_width="125dp"
         android:layout_height="wrap_content"
         android:textSize="20dp"
-        android:layout_marginStart="25dp">
+        android:layout_marginStart="25dp"
+        android:textColor="@color/black">
     </TextView>
 
     <TextView

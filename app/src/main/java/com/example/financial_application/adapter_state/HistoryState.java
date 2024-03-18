@@ -24,7 +24,11 @@ public class HistoryState {
 
     public HistoryState(String date, String name, String summa, int is_expense, int is_big_purchase, String comment, int[] color) {
         this.date = date;
-        this.name = name;
+        if (name.length() > 10) {
+            this.name = name.substring(0, 9) + "...";
+        } else {
+            this.name = name;
+        }
         this.summa = summa;
         this.is_expense = is_expense;
         this.is_big_purchase = is_big_purchase;

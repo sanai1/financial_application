@@ -108,26 +108,28 @@ public class HistoryActivity extends AppCompatActivity {
                 Toast.makeText(HistoryActivity.this, historyState.getComment(), Toast.LENGTH_SHORT).show();
             }
         };
-        String command = "select " + DBHelper.COLUMN_IS_EXPENSE + ", " + DBHelper.COLUMN_IS_BIG_PURCHASE + ", " +
+        String command = "select " + DBHelper.COLUMN_IS_BIG_PURCHASE + ", " + //  + DBHelper.COLUMN_IS_EXPENSE + ", "
                 DBHelper.COLUMN_SUMMA + ", " + DBHelper.COLUMN_ADD_DATA + ", " + DBHelper.COLUMN_CATEGORY_UID + ", " +
                 DBHelper.COLUMN_UID + " from " + DBHelper.TABLE_HISTORY;
         // TODO: сделать сортировку записей истории (от самой последней к самой старой записи)
         Cursor cursor = database.rawQuery(command, null);
 
-        HashMap<String, String> hashMapCategory = new HashMap<>();
+        HashMap<String, String> hashMapName = new HashMap<>();
+
         String command_get_category = "select * from " + DBHelper.TABLE_CATEGORY;
         Cursor cursor_get_category = database.rawQuery(command_get_category, null);
 
         while (cursor_get_category.moveToNext()) {
-            hashMapCategory.put(cursor_get_category.getString(0), cursor_get_category.getString(1));
+            hashMapName.put(cursor_get_category.getString(0), cursor_get_category.getString(1));
         }
         cursor_get_category.close();
 
-        String name, command_comments;
+        String name, command_comments, command_expense;
         while (cursor.moveToNext()) {
             int[] color = {76, 175, 80};
-            name = hashMapCategory.get(cursor.getString(4));
-            command_comments = "select " + DBHelper.COLUMN_COMMENT + " from " + DBHelper.TABLE_COMMENTS + " where " + DBHelper.COLUMN_UID_COMMENT + " = '" + cursor.getString(5) + "'";
+            name = hashMapName.get(cursor.getString(3));
+
+            command_comments = "select " + DBHelper.COLUMN_COMMENT + " from " + DBHelper.TABLE_COMMENTS + " where " + DBHelper.COLUMN_UID_COMMENT + " = '" + cursor.getString(4) + "'";
             Cursor cursor_comment = database.rawQuery(command_comments, null);
             cursor_comment.moveToNext();
             String comment = cursor_comment.getString(0);
@@ -135,10 +137,17 @@ public class HistoryActivity extends AppCompatActivity {
             if (comment.length() == 0) {
                 comment = "нет комментария";
             }
-            if (cursor.getInt(0) == 1) {
-                historyStateList.add(new HistoryState(cursor.getString(3), name, cursor.getString(2), cursor.getInt(0), cursor.getInt(1), comment));
+
+            command_expense = "select " + DBHelper.COLUMN_EXPENSE + " from " + DBHelper.TABLE_CATEGORY + " where " + DBHelper.COLUMN_CATEGORY_ID + " = '" + cursor.getString(3) + "'";
+            Cursor cursor_expense = database.rawQuery(command_expense, null);
+            cursor_expense.moveToNext();
+            int expense = cursor_expense.getInt(0);
+            cursor_expense.close();
+
+            if (expense == 1) {
+                historyStateList.add(new HistoryState(cursor.getString(2), name, cursor.getString(1), expense, cursor.getInt(0), comment));
             } else {
-                historyStateList.add(new HistoryState(cursor.getString(3), name, cursor.getString(2), cursor.getInt(0), cursor.getInt(1), comment, color));
+                historyStateList.add(new HistoryState(cursor.getString(2), name, cursor.getString(1), expense, cursor.getInt(0), comment, color));
             }
         }
         cursor.close();

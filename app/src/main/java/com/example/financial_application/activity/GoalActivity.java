@@ -68,6 +68,32 @@ public class GoalActivity extends AppCompatActivity {
             create_menu();
         }
     }
+    private String getCommand() {
+        String command = "select  t.*," +
+                "t.dohod - t.rash as delta " +
+                "from ( " +
+                "SELECT " +
+                "sum((case when " + DBHelper.COLUMN_EXPENSE + " = 1 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA_GOAL + " else 0 end)) as rash, " +
+                "sum((case when " + DBHelper.COLUMN_EXPENSE + " = 0 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA_GOAL + " else 0 end)) as dohod, " +
+                "substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7) as my " +
+                "from ( " +
+                " select h." + DBHelper.COLUMN_SUMMA + " h." + DBHelper.COLUMN_IS_BIG_PURCHASE + " h." + DBHelper.COLUMN_ADD_DATA + " c." + DBHelper.COLUMN_EXPENSE +
+                " from " + DBHelper.TABLE_HISTORY + " h " +
+                " left join " + DBHelper.TABLE_CATEGORY + " c on c." + DBHelper.COLUMN_CATEGORY_ID + " = " + DBHelper.COLUMN_CATEGORY_UID + ") " +
+                "group by substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7)" +
+                ") t ";
+//        String command_delta = "select t.*, " +
+//                " t.dohod - t.rash as delta " +
+//                " from ( " +
+//                " select " +
+//                " sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 1 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA + " else 0 end)) as rash, " +
+//                " sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 0 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA + " else 0 end)) as dohod " +
+//                " substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7) as my " +
+//                " from " + DBHelper.TABLE_HISTORY + " h " +
+//                " group by substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7) " +
+//                " ) t ";
+        return command;
+    }
 
     protected void onStart() {
         // TODO: добавить обновление таблицы при изменении истории (меняется история -> меняются записи истории капитала)
@@ -104,17 +130,18 @@ public class GoalActivity extends AppCompatActivity {
                         } else {
                             month = now_month - 1 + 0.11;
                         }
-                        String command_delta = "select t.*, " +
-                                " t.dohod - t.rash as delta " +
-                                " from ( " +
-                                " select " +
-                                " sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 1 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA + " else 0 end)) as rash, " +
-                                " sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 0 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA + " else 0 end)) as dohod " +
-                                " substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7) as my " +
-                                " from " + DBHelper.TABLE_HISTORY + " h " +
-                                " group by substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7) " +
-                                " ) t where my = '" + month + "'";
-                        Cursor cursor_delta = database.rawQuery(command_delta, null);
+                        String command = getCommand() + " where my = '" + month + "'";
+//                                "select t.*, " +
+//                                " t.dohod - t.rash as delta " +
+//                                " from ( " +
+//                                " select " +
+//                                " sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 1 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA + " else 0 end)) as rash, " +
+//                                " sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 0 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA + " else 0 end)) as dohod " +
+//                                " substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7) as my " +
+//                                " from " + DBHelper.TABLE_HISTORY + " h " +
+//                                " group by substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7) " +
+//                                " ) t where my = '" + month + "'";
+                        Cursor cursor_delta = database.rawQuery(command, null);
                         cursor_delta.moveToNext();
 
                         ContentValues contentValues = new ContentValues();
@@ -200,16 +227,20 @@ public class GoalActivity extends AppCompatActivity {
 
     private List<Double> getCoefficients() {
         List<Double> doubleList = new ArrayList<>();
-        String command = "select  t.*," +
-                "t.dohod - t.rash as delta " +
-                "from ( " +
-                "SELECT " +
-                "sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 1 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA_GOAL + " else 0 end)) as rash, " +
-                "sum((case when " + DBHelper.COLUMN_IS_EXPENSE + " = 0 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA_GOAL + " else 0 end)) as dohod, " +
-                "substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7) as my " +
-                "from " + DBHelper.TABLE_HISTORY + " as h " +
-                "group by substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7)" +
-                ") t order by my";
+        String command = getCommand() + " order by my";
+//                "select  t.*," +
+//                "t.dohod - t.rash as delta " +
+//                "from ( " +
+//                "SELECT " +
+//                "sum((case when " + DBHelper.COLUMN_EXPENSE + " = 1 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA_GOAL + " else 0 end)) as rash, " +
+//                "sum((case when " + DBHelper.COLUMN_EXPENSE + " = 0 and " + DBHelper.COLUMN_IS_BIG_PURCHASE + " = 0 then " + DBHelper.COLUMN_SUMMA_GOAL + " else 0 end)) as dohod, " +
+//                "substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7) as my " +
+//                "from ( "
+//                        " select h." + DBHelper.COLUMN_SUMMA + " h." + DBHelper.COLUMN_IS_BIG_PURCHASE + " h." + DBHelper.COLUMN_ADD_DATA + " c." + DBHelper.COLUMN_EXPENSE +
+//                                " from " + DBHelper.TABLE_HISTORY + " h " +
+//                                " left join " + DBHelper.TABLE_CATEGORY + " c on c." + DBHelper.COLUMN_CATEGORY_ID + " = " + DBHelper.COLUMN_CATEGORY_UID + ") " +
+//                "group by substr( " + DBHelper.COLUMN_ADD_DATA + " ,4,7)" +
+//                ") t order by my";
 
         Cursor cursor = database.rawQuery(command, null);
 
