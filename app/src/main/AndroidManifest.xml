@@ -6,9 +6,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Financial_application"
         tools:targetApi="31">
@@ -26,6 +26,7 @@
         <activity android:name="com.example.financial_application.activity.ReportActivity" />
         <activity android:name="com.example.financial_application.activity.CategoryActivity" />
         <activity android:name="com.example.financial_application.activity.FeedbackActivity" />
+        <activity android:name="com.example.financial_application.activity.StartAutActivity" />
     </application>
 
 </manifest>

@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         binding_activity_main = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding_activity_main.getRoot());
