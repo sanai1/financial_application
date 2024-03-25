@@ -54,6 +54,8 @@ public class CategoryUpdateDialog extends DialogFragment implements View.OnClick
             radioButtonExpense.setChecked(false);
             radioButtonIncome.setChecked(true);
         }
+        radioButtonIncome.setEnabled(false);
+        radioButtonExpense.setEnabled(false);
     }
 
     @Override

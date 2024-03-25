@@ -43,7 +43,7 @@
             android:ems="10"
             android:gravity="center"
             android:hint="введите сумму"
-            android:textColorHint="@color/black"
+            android:textColorHint="@color/gray"
             android:inputType="number"
             android:textSize="25dp"
             app:layout_constraintBottom_toTopOf="@+id/checkBox_bid_purchase"
@@ -54,23 +54,22 @@
             app:layout_constraintVertical_bias="0.946" />
 
 
-
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="228dp"
             android:layout_height="54dp"
             app:layout_constraintBottom_toTopOf="@+id/editTextNumberSum"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.481"
+            app:layout_constraintHorizontal_bias="0.437"
             app:layout_constraintStart_toEndOf="@+id/floatingActionButtonAddCategory"
             app:layout_constraintTop_toTopOf="@+id/include_menu"
-            app:layout_constraintVertical_bias="0.787" />
+            app:layout_constraintVertical_bias="0.757" />
 
         <TextView
             android:id="@+id/textViewDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="7"
+            android:ems="8"
             android:gravity="center"
             android:onClick="update_data"
             android:text="сегодня"
@@ -88,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
-            android:layout_marginTop="125dp"
+            android:layout_marginTop="110dp"
             android:onClick="income"
             android:backgroundTint="@color/blue"
             android:text="доход"
@@ -117,7 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
-            android:layout_marginTop="125dp"
+            android:layout_marginTop="110dp"
             android:enabled="false"
             android:onClick="expense"
             android:backgroundTint="@color/light_sky_blue"
@@ -132,12 +131,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="677dp"
-            android:layout_marginBottom="75dp"
+            android:layout_marginBottom="80dp"
             android:ems="10"
             android:gravity="center"
             android:hint="комментарий"
             android:inputType="text"
-            android:textColorHint="@color/black"
+            android:textColorHint="@color/gray"
             android:textSize="25dp"
             app:layout_constraintBottom_toTopOf="@+id/button_save"
             app:layout_constraintEnd_toEndOf="parent"
@@ -150,7 +149,7 @@
             android:layout_width="74dp"
             android:layout_height="69dp"
             android:layout_marginStart="45dp"
-            android:layout_marginTop="230dp"
+            android:layout_marginTop="220dp"
             android:clickable="true"
             android:onClick="add_category_in_mainactivity"
             app:layout_constraintBottom_toTopOf="@+id/editTextNumberSum"

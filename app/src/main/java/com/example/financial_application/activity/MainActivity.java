@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         binding_activity_main = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding_activity_main.getRoot());
 
-        binding_activity_main.includeMenu.textViewInfo.setText("Капитал");
+        binding_activity_main.includeMenu.textViewInfo.setText("Бюджет");
         binding_activity_main.navigatorViewId.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

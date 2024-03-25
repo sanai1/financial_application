@@ -286,7 +286,7 @@ public class GoalActivity extends AppCompatActivity {
         ContentValues contentValues = new ContentValues();
         double time_now = Double.valueOf(format.format(calendar.getTime())), time_finish;
 
-        if (cnt_month > 0 && cnt_month < 1200) {
+        if (cnt_month > 0 && cnt_month < 600) {
             long year = cnt_month / 12;
             time_finish = time_now + year;
             time_finish += 0.01 * (cnt_month % 12);
@@ -297,15 +297,21 @@ public class GoalActivity extends AppCompatActivity {
                 long num = delta_cheloe + (long) number;
                 time_finish = num + (number % 1)*0.12;
             }
-            String time = String.valueOf(time_finish).substring(0, 7);
+            String str_time_finish;
+            if (String.valueOf(time_finish).length() < 7) {
+                str_time_finish = String.valueOf(time_finish) + "0";
+            } else {
+                str_time_finish = String.valueOf(time_finish);
+            }
+            String time = str_time_finish.substring(0, 7);
             binding_activity_goal.textViewPS.setText("около " + String.valueOf(cnt_month) + " месяцев (по рассчету на " + time_now + ")");
             binding_activity_goal.textViewDate.setText("Дата достижения цели: " + String.valueOf(time));
             contentValues.put(DBHelper.COLUMN_DATE_FINISH, time);
 
-        } else if (cnt_month == 1200){
+        } else if (cnt_month == 600){
             binding_activity_goal.textViewPS.setText("");
             binding_activity_goal.textViewDate.setText(text_goal);
-            contentValues.put(DBHelper.COLUMN_DATE_FINISH, "более чем через 100 лет");
+            contentValues.put(DBHelper.COLUMN_DATE_FINISH, "более чем через 50 лет");
         } else { // cnt_month = 0
             binding_activity_goal.textViewDate.setText(text_goal);
             contentValues.put(DBHelper.COLUMN_DATE_FINISH, "уже достигнута");
@@ -628,7 +634,6 @@ public class GoalActivity extends AppCompatActivity {
             try {
                 number_sum = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberSum.getText()));
                 number_start_sum = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberStartSum.getText()));
-                number_percent = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberPercent.getText()));
             } catch (Exception ise) {
                 Toast.makeText(this, "Проверьте введенные данные", Toast.LENGTH_SHORT).show();
                 is_exception = true;
@@ -639,7 +644,12 @@ public class GoalActivity extends AppCompatActivity {
                 try {
                     number_inflation = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberInflation.getText()));
                 } catch (Exception ise) {
-                    number_inflation = 5;
+                    number_inflation = 7;
+                }
+                try {
+                    number_percent = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberPercent.getText()));
+                } catch (Exception ise) {
+                    number_percent = 0;
                 }
 
                 SQLiteDatabase database = dbHelper.getWritableDatabase();
