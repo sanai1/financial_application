@@ -139,7 +139,7 @@ public class GoalActivity extends AppCompatActivity {
             }
         };
         Thread thread = new Thread(runnable);
-        thread.start();
+//        thread.start();
     }
 
     protected void onResume() {
