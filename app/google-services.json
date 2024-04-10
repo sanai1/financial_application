@@ -12,7 +12,12 @@
           "package_name": "com.example.financial_application"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "351209746848-02l9ektdguu6lm63r00lk9kpcb4gvqtu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyADMFrEz6veyb9x4FyoVSEuH_oNtZXDgCA"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "351209746848-02l9ektdguu6lm63r00lk9kpcb4gvqtu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

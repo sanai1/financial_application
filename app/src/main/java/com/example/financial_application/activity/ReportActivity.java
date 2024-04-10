@@ -33,30 +33,30 @@ public class ReportActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 if (id == R.id.nav_main) {
                     binding_activity_report.drawerLayoutId.close();
-                    Toast.makeText(ReportActivity.this, "Главная", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ReportActivity.this, "Главная", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ReportActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_goal){
                     binding_activity_report.drawerLayoutId.close();
-                    Toast.makeText(ReportActivity.this, "Цель", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ReportActivity.this, "Цель", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ReportActivity.this, GoalActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_history) {
                     binding_activity_report.drawerLayoutId.close();
-                    Toast.makeText(ReportActivity.this, "История", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ReportActivity.this, "История", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ReportActivity.this, HistoryActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_report) {
                     binding_activity_report.drawerLayoutId.close();
-                    Toast.makeText(ReportActivity.this, "Отчет", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ReportActivity.this, "Отчет", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_categories) {
                     binding_activity_report.drawerLayoutId.close();
-                    Toast.makeText(ReportActivity.this, "Категории", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ReportActivity.this, "Категории", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ReportActivity.this, CategoryActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_feedback) {
                     binding_activity_report.drawerLayoutId.close();
-                    Toast.makeText(ReportActivity.this, "Обратная связь", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ReportActivity.this, "Обратная связь", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(ReportActivity.this, FeedbackActivity.class);
                     startActivity(intent);
                 }
