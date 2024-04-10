@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "351209746848",
+    "firebase_url": "https://financial-application-efc97-default-rtdb.firebaseio.com",
     "project_id": "financial-application-efc97",
     "storage_bucket": "financial-application-efc97.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "351209746848-7269jn54h3cn7lfup8tbbjokk731pimb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.financial_application",
+            "certificate_hash": "c5c11ddc058fe8fc737d16bf2ef47d4e4276f470"
+          }
+        },
         {
           "client_id": "351209746848-02l9ektdguu6lm63r00lk9kpcb4gvqtu.apps.googleusercontent.com",
           "client_type": 3

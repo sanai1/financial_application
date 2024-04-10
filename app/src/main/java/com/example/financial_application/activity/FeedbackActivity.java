@@ -12,8 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 
 import com.example.financial_application.R;
+import com.example.financial_application.authorization.AuthorizationActivity;
 import com.example.financial_application.databinding.ActivityFeedbackBinding;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class FeedbackActivity extends AppCompatActivity {
     private ActivityFeedbackBinding binding_activity_feedback;
@@ -33,32 +35,32 @@ public class FeedbackActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 if (id == R.id.nav_main) {
                     binding_activity_feedback.drawerLayout.close();
-//                    Toast.makeText(FeedbackActivity.this, "Главная", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(FeedbackActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_goal){
                     binding_activity_feedback.drawerLayout.close();
-//                    Toast.makeText(FeedbackActivity.this, "Цель", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(FeedbackActivity.this, GoalActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_history) {
                     binding_activity_feedback.drawerLayout.close();
-//                    Toast.makeText(FeedbackActivity.this, "История", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(FeedbackActivity.this, HistoryActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_report) {
                     binding_activity_feedback.drawerLayout.close();
-//                    Toast.makeText(FeedbackActivity.this, "Отчет", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(FeedbackActivity.this, ReportActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_categories) {
                     binding_activity_feedback.drawerLayout.close();
-//                    Toast.makeText(FeedbackActivity.this, "Категории", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(FeedbackActivity.this, CategoryActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_feedback) {
                     binding_activity_feedback.drawerLayout.close();
-//                    Toast.makeText(FeedbackActivity.this, "Обратная связь", Toast.LENGTH_SHORT).show();
+                } else if (id == R.id.nav_exit) {
+                    binding_activity_feedback.drawerLayout.close();
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(FeedbackActivity.this, AuthorizationActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return true;
             }

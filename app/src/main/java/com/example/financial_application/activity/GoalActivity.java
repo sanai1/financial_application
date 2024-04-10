@@ -16,6 +16,7 @@ import androidx.core.view.GravityCompat;
 
 import com.example.financial_application.DBHelper;
 import com.example.financial_application.R;
+import com.example.financial_application.authorization.AuthorizationActivity;
 import com.example.financial_application.databinding.ActivityGoalBinding;
 import com.example.financial_application.databinding.ActivityGoalStartBinding;
 import com.github.mikephil.charting.charts.LineChart;
@@ -27,6 +28,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -510,32 +512,32 @@ public class GoalActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 if (id == R.id.nav_main) {
                     binding_activity_goal_start.goalDrawerLayout.close();
-//                    Toast.makeText(GoalActivity.this, "Главная", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(GoalActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_goal) {
                     binding_activity_goal_start.goalDrawerLayout.close();
-//                    Toast.makeText(GoalActivity.this, "Цель", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_history) {
                     binding_activity_goal_start.goalDrawerLayout.close();
-//                    Toast.makeText(GoalActivity.this, "История", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(GoalActivity.this, HistoryActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_report) {
                     binding_activity_goal_start.goalDrawerLayout.close();
-//                    Toast.makeText(GoalActivity.this, "Отчет", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(GoalActivity.this, ReportActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_categories) {
                     binding_activity_goal_start.goalDrawerLayout.close();
-//                    Toast.makeText(GoalActivity.this, "Категории", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(GoalActivity.this, CategoryActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_feedback) {
                     binding_activity_goal_start.goalDrawerLayout.close();
-//                    Toast.makeText(GoalActivity.this, "Обратная связь", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(GoalActivity.this, FeedbackActivity.class);
                     startActivity(intent);
+                } else if (id == R.id.nav_exit) {
+                    binding_activity_goal_start.goalDrawerLayout.close();
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(GoalActivity.this, AuthorizationActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return true;
             }
@@ -563,32 +565,32 @@ public class GoalActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 if (id == R.id.nav_main) {
                     binding_activity_goal.goalDrawerLayout.close();
-//                    Toast.makeText(GoalActivity.this, "Главная", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(GoalActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_goal) {
                     binding_activity_goal.goalDrawerLayout.close();
-//                    Toast.makeText(GoalActivity.this, "Цель", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_history) {
                     binding_activity_goal.goalDrawerLayout.close();
-//                    Toast.makeText(GoalActivity.this, "История", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(GoalActivity.this, HistoryActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_report) {
                     binding_activity_goal.goalDrawerLayout.close();
-//                    Toast.makeText(GoalActivity.this, "Отчет", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(GoalActivity.this, ReportActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_categories) {
                     binding_activity_goal.goalDrawerLayout.close();
-//                    Toast.makeText(GoalActivity.this, "Категории", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(GoalActivity.this, CategoryActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_feedback) {
                     binding_activity_goal.goalDrawerLayout.close();
-//                    Toast.makeText(GoalActivity.this, "Обратная связь", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(GoalActivity.this, FeedbackActivity.class);
                     startActivity(intent);
+                } else if (id == R.id.nav_exit) {
+                    binding_activity_goal.goalDrawerLayout.close();
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(GoalActivity.this, AuthorizationActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return true;
             }

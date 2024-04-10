@@ -16,6 +16,7 @@ import androidx.core.view.GravityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.financial_application.authorization.AuthorizationActivity;
 import com.example.financial_application.dialog_fragment.CategoryUpdateDialog;
 import com.example.financial_application.dialog_fragment.CategoryDialog;
 import com.example.financial_application.adapter_state.CategoryState;
@@ -25,6 +26,7 @@ import com.example.financial_application.R;
 import com.example.financial_application.databinding.ActivityCategoryBinding;
 import com.example.financial_application.databinding.AddCategoryBinding;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,32 +65,32 @@ public class CategoryActivity extends AppCompatActivity implements CategoryDialo
                 int id = item.getItemId();
                 if (id == R.id.nav_main) {
                     binding_activity_category.drawerLayoutId.close();
-//                    Toast.makeText(CategoryActivity.this, "Главная", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(CategoryActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_goal){
                     binding_activity_category.drawerLayoutId.close();
-//                    Toast.makeText(CategoryActivity.this, "Цель", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(CategoryActivity.this, GoalActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_history) {
                     binding_activity_category.drawerLayoutId.close();
-//                    Toast.makeText(CategoryActivity.this, "История", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(CategoryActivity.this, HistoryActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_report) {
                     binding_activity_category.drawerLayoutId.close();
-//                    Toast.makeText(CategoryActivity.this, "Отчет", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(CategoryActivity.this, ReportActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_categories) {
                     binding_activity_category.drawerLayoutId.close();
-//                    Toast.makeText(CategoryActivity.this, "Категории", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_feedback) {
                     binding_activity_category.drawerLayoutId.close();
-//                    Toast.makeText(CategoryActivity.this, "Обратная связь", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(CategoryActivity.this, FeedbackActivity.class);
                     startActivity(intent);
+                } else if (id == R.id.nav_exit) {
+                    binding_activity_category.drawerLayoutId.close();
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(CategoryActivity.this, AuthorizationActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return true;
             }

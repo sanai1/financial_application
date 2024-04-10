@@ -68,9 +68,6 @@ public class AutEmailActivity extends AppCompatActivity {
         Pair<String, String> info = getUserInfo();
         if (info == null) return;
 
-        System.out.println("log_in");
-        // TODO: реализовать логику входа в учетную запись, если такая существует, если пароль подходит
-
         firebaseAuth.signInWithEmailAndPassword(info.first, info.second)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -102,19 +99,13 @@ public class AutEmailActivity extends AppCompatActivity {
             return;
         }
 
-        System.out.println("registration");
-        // TODO: реализовать логику создания учетной записи
-        System.out.println(info.first + " --> " + info.second);
-
         firebaseAuth.createUserWithEmailAndPassword(info.first, info.second)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Пользователь успешно создан
-                            System.out.println("=========================================");
                             Log.d(TAG, "createUserWithEmail:success");
-                            System.out.println("----------------------------------------------------");
                             goToMainActivity();
                         } else {
                             // Произошла ошибка при создании пользователя

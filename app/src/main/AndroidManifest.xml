@@ -16,7 +16,7 @@
         android:theme="@style/Theme.Financial_application"
         tools:targetApi="31">
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".authorization.AuthorizationActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +29,7 @@
         <activity android:name="com.example.financial_application.activity.ReportActivity" />
         <activity android:name="com.example.financial_application.activity.CategoryActivity" />
         <activity android:name="com.example.financial_application.activity.FeedbackActivity" />
-        <activity android:name="com.example.financial_application.authorization.AuthorizationActivity" />
+        <activity android:name="com.example.financial_application.activity.MainActivity" />
         <activity android:name="com.example.financial_application.authorization.AutEmailActivity" />
         <activity android:name="com.example.financial_application.authorization.AutGoogleActivity" />
     </application>

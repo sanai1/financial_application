@@ -18,8 +18,10 @@ import com.example.financial_application.DBHelper;
 import com.example.financial_application.adapter_state.HistoryState;
 import com.example.financial_application.adapter_state.HistoryStateAdapter;
 import com.example.financial_application.R;
+import com.example.financial_application.authorization.AuthorizationActivity;
 import com.example.financial_application.databinding.ActivityHistoryBinding;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,32 +54,32 @@ public class HistoryActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 if (id == R.id.nav_main) {
                     binding_activity_history.drawerLayoutId.close();
-//                    Toast.makeText(HistoryActivity.this, "Главная", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(HistoryActivity.this, MainActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_goal){
                     binding_activity_history.drawerLayoutId.close();
-//                    Toast.makeText(HistoryActivity.this, "Цель", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(HistoryActivity.this, GoalActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_history) {
                     binding_activity_history.drawerLayoutId.close();
-//                    Toast.makeText(HistoryActivity.this, "История", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_report) {
                     binding_activity_history.drawerLayoutId.close();
-//                    Toast.makeText(HistoryActivity.this, "Отчет", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(HistoryActivity.this, ReportActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_categories) {
                     binding_activity_history.drawerLayoutId.close();
-//                    Toast.makeText(HistoryActivity.this, "Категории", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(HistoryActivity.this, CategoryActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_feedback) {
                     binding_activity_history.drawerLayoutId.close();
-//                    Toast.makeText(HistoryActivity.this, "Обратная связь", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(HistoryActivity.this, FeedbackActivity.class);
                     startActivity(intent);
+                } else if (id == R.id.nav_exit) {
+                    binding_activity_history.drawerLayoutId.close();
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(HistoryActivity.this, AuthorizationActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return true;
             }

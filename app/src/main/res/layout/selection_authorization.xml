@@ -37,13 +37,12 @@
             android:onClick="btn_aut_email"
             android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/imageButtonEmail"
+            <ImageView
                 android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:onClick="btn_aut_email"
-                app:srcCompat="@drawable/fui_ic_mail_white_24dp" />
+                app:srcCompat="@mipmap/ic_email_foreground" />
 
             <TextView
                 android:id="@+id/textViewEmail"
@@ -66,13 +65,12 @@
             android:onClick="btn_aut_google"
             android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/imageButton2"
+            <ImageView
                 android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:onClick="btn_aut_google"
-                app:srcCompat="@drawable/fui_ic_googleg_color_24dp" />
+                app:srcCompat="@mipmap/ic_google_foreground" />
 
             <TextView
                 android:id="@+id/textViewGoogle"
@@ -93,13 +91,12 @@
             android:onClick="btn_aut_phone"
             android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/imageButton4"
+            <ImageView
                 android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:onClick="btn_aut_phone"
-                app:srcCompat="@drawable/fui_ic_phone_white_24dp" />
+                app:srcCompat="@mipmap/ic_phone_foreground" />
 
             <TextView
                 android:id="@+id/textViewPhone"

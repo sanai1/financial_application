@@ -21,10 +21,12 @@ import androidx.core.view.GravityCompat;
 
 import com.example.financial_application.DBHelper;
 import com.example.financial_application.R;
+import com.example.financial_application.authorization.AuthorizationActivity;
 import com.example.financial_application.databinding.ActivityMainBinding;
 import com.example.financial_application.databinding.AddCategoryBinding;
 import com.example.financial_application.dialog_fragment.CategoryDialog;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
 import java.util.UUID;
@@ -56,32 +58,32 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
                 int id = item.getItemId();
                 if (id == R.id.nav_main) {
                     binding_activity_main.drawerLayoutId.close();
-//                    Toast.makeText(MainActivity.this, "Главная", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_goal){
                     binding_activity_main.drawerLayoutId.close();
-//                    Toast.makeText(MainActivity.this, "Цель", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, GoalActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_history) {
                     binding_activity_main.drawerLayoutId.close();
-//                    Toast.makeText(MainActivity.this, "История", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_report) {
                     binding_activity_main.drawerLayoutId.close();
-//                    Toast.makeText(MainActivity.this, "Отчет", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, ReportActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_categories) {
                     binding_activity_main.drawerLayoutId.close();
-//                    Toast.makeText(MainActivity.this, "Категории", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_feedback) {
                     binding_activity_main.drawerLayoutId.close();
-//                    Toast.makeText(MainActivity.this, "Обратная связь", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, FeedbackActivity.class);
                     startActivity(intent);
+                } else if (id == R.id.nav_exit) {
+                    binding_activity_main.drawerLayoutId.close();
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(MainActivity.this, AuthorizationActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 return true;
             }
@@ -243,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
 
     public void menu(View view) {
         binding_activity_main.drawerLayoutId.openDrawer(GravityCompat.START);
-        Toast.makeText(this, "Меню", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Меню", Toast.LENGTH_SHORT).show();
     }
 
     public void save_expense(View view) {
