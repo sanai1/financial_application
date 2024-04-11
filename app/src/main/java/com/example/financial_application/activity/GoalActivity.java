@@ -14,11 +14,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 
+import com.example.financial_application.ConnectRealtimeDatabase;
 import com.example.financial_application.DBHelper;
 import com.example.financial_application.R;
 import com.example.financial_application.authorization.AuthorizationActivity;
 import com.example.financial_application.databinding.ActivityGoalBinding;
 import com.example.financial_application.databinding.ActivityGoalStartBinding;
+import com.example.financial_application.users.CalculatorInfo;
+import com.example.financial_application.users.Capital;
+import com.example.financial_application.users.Goal;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
@@ -29,6 +33,8 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +42,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.UUID;
 
 public class GoalActivity extends AppCompatActivity {
     protected ActivityGoalStartBinding binding_activity_goal_start;
@@ -44,8 +51,10 @@ public class GoalActivity extends AppCompatActivity {
     protected SQLiteDatabase database;
     private boolean start_activity = true;
     private boolean first_version_goal = true;
-    private Integer number_start_sum = null;
+    private Double number_start_sum = null;
     private LineChart lineChart;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -69,6 +78,9 @@ public class GoalActivity extends AppCompatActivity {
         } else {
             create_menu();
         }
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        root = FirebaseDatabase.getInstance().getReference().getRoot();
     }
     private String getCommand() {
         String command = "select  t.*, " +
@@ -148,14 +160,12 @@ public class GoalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 binding_activity_goal.goalDrawerLayout.openDrawer(GravityCompat.START);
-                print();
             }
         });
         binding_activity_goal_start.includeMenu.buttonMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 binding_activity_goal_start.goalDrawerLayout.openDrawer(GravityCompat.START);
-                print();
             }
         });
 
@@ -287,6 +297,7 @@ public class GoalActivity extends AppCompatActivity {
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM");
         ContentValues contentValues = new ContentValues();
         double time_now = Double.valueOf(format.format(calendar.getTime())), time_finish;
+        String date_finish;
 
         if (cnt_month > 0 && cnt_month < 600) {
             long year = cnt_month / 12;
@@ -305,19 +316,19 @@ public class GoalActivity extends AppCompatActivity {
             } else {
                 str_time_finish = String.valueOf(time_finish);
             }
-            String time = str_time_finish.substring(0, 7);
+            date_finish = str_time_finish.substring(0, 7);
             binding_activity_goal.textViewPS.setText("около " + String.valueOf(cnt_month) + " месяцев (по рассчету на " + time_now + ")");
-            binding_activity_goal.textViewDate.setText("Дата достижения цели: " + String.valueOf(time));
-            contentValues.put(DBHelper.COLUMN_DATE_FINISH, time);
-
+            binding_activity_goal.textViewDate.setText("Дата достижения цели: " + String.valueOf(date_finish));
         } else if (cnt_month == 600){
             binding_activity_goal.textViewPS.setText("");
             binding_activity_goal.textViewDate.setText(text_goal);
-            contentValues.put(DBHelper.COLUMN_DATE_FINISH, "более чем через 50 лет");
+            date_finish = "более чем через 50 лет";
         } else { // cnt_month = 0
             binding_activity_goal.textViewDate.setText(text_goal);
-            contentValues.put(DBHelper.COLUMN_DATE_FINISH, "уже достигнута");
+            date_finish = "уже достигнута";
+
         }
+        contentValues.put(DBHelper.COLUMN_DATE_FINISH, date_finish);
         String percent = get_percent(capital_now, goal_sum);
         binding_activity_goal.textViewPercentGoal.setText("Процент выполнения: " + percent + "%");
 
@@ -325,7 +336,15 @@ public class GoalActivity extends AppCompatActivity {
         contentValues.put(DBHelper.COLUMN_TEMP_GOAL, cnt_month);
 
         contentValues.put(DBHelper.COLUMN_PERCENT_DATE, percent);
+        String id = UUID.randomUUID().toString();
+        contentValues.put(DBHelper.COLUMN_CALCULATION_ID, id);
+
         database.insert(DBHelper.TABLE_CALCULATION_INFO, null, contentValues);
+
+        // ---- добавление данных в Firebase
+        CalculatorInfo calculatorInfo = new CalculatorInfo(id, String.valueOf(time_now), cnt_month, date_finish, percent);
+        ConnectRealtimeDatabase.getInstance(this).saveCalculatorInfo(firebaseAuth.getCurrentUser().getUid(), calculatorInfo);
+        // --- данные добавлены
 
         Thread thread = getThreadUpdate(cnt_month, k, b, capital_now);
         thread.start();
@@ -499,10 +518,6 @@ public class GoalActivity extends AppCompatActivity {
         first_version_goal = false;
     }
 
-    private void print() {
-        Toast.makeText(this, "Меню", Toast.LENGTH_SHORT).show();
-    }
-
     private void create_menu_start() {
         setContentView(binding_activity_goal_start.getRoot());
         lineChart = findViewById(R.id.line_chart);
@@ -600,13 +615,14 @@ public class GoalActivity extends AppCompatActivity {
     private void update_goal() {
         ContentValues contentValues = new ContentValues();
         ContentValues contentValues_capital = new ContentValues();
-        String new_name_goal, new_summa, new_start_capital, new_percent, new_inflation;
+        String new_name_goal;
+        Double new_summa, new_start_capital, new_percent, new_inflation;
 
         new_name_goal = binding_activity_goal_start.editTextTextName.getText().toString();
-        new_summa = binding_activity_goal_start.editTextNumberSum.getText().toString();
-        new_start_capital = binding_activity_goal_start.editTextNumberStartSum.getText().toString();
-        new_percent = binding_activity_goal_start.editTextNumberPercent.getText().toString();
-        new_inflation = binding_activity_goal_start.editTextNumberInflation.getText().toString();
+        new_summa = Double.valueOf(binding_activity_goal_start.editTextNumberSum.getText().toString());
+        new_start_capital = Double.valueOf(binding_activity_goal_start.editTextNumberStartSum.getText().toString());
+        new_percent = Double.valueOf(binding_activity_goal_start.editTextNumberPercent.getText().toString());
+        new_inflation = Double.valueOf(binding_activity_goal_start.editTextNumberInflation.getText().toString());
 
         contentValues.put(DBHelper.COLUMN_NAME, new_name_goal);
         contentValues.put(DBHelper.COLUMN_SUMMA_GOAL, new_summa);
@@ -618,6 +634,13 @@ public class GoalActivity extends AppCompatActivity {
 
         database.update(DBHelper.TABLE_GOAL, contentValues, DBHelper.COLUMN_GOAL_UID + " = 1", null);
         database.update(DBHelper.TABLE_CAPITAL, contentValues_capital, DBHelper.COLUMN_UID_CAPITAL + " = 1", null);
+
+        // ---- добавление данных в Firebase
+        Goal goal = new Goal(new_name_goal, new_summa, new_start_capital, new_percent, new_inflation, 1);
+
+        ConnectRealtimeDatabase.getInstance(this).saveGoal(firebaseAuth.getCurrentUser().getUid(), goal);
+        ConnectRealtimeDatabase.getInstance(this).updateCapital(firebaseAuth.getCurrentUser().getUid(), new_start_capital);
+        // --- данные добавлены
 
         Toast.makeText(this, "Цель изменена", Toast.LENGTH_SHORT).show();
     }
@@ -632,10 +655,10 @@ public class GoalActivity extends AppCompatActivity {
         } else {
             first_version_goal = false;
             boolean is_exception = false;
-            Integer number_sum = null, number_percent = null, number_inflation;
+            Double number_sum = null, number_percent = null, number_inflation;
             try {
-                number_sum = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberSum.getText()));
-                number_start_sum = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberStartSum.getText()));
+                number_sum = Double.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberSum.getText()));
+                number_start_sum = Double.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberStartSum.getText()));
             } catch (Exception ise) {
                 Toast.makeText(this, "Проверьте введенные данные", Toast.LENGTH_SHORT).show();
                 is_exception = true;
@@ -644,14 +667,14 @@ public class GoalActivity extends AppCompatActivity {
             String name_goal = binding_activity_goal_start.editTextTextName.getText().toString();
             if (!is_exception && name_goal.length() != 0) {
                 try {
-                    number_inflation = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberInflation.getText()));
+                    number_inflation = Double.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberInflation.getText()));
                 } catch (Exception ise) {
-                    number_inflation = 7;
+                    number_inflation = 7.0;
                 }
                 try {
-                    number_percent = Integer.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberPercent.getText()));
+                    number_percent = Double.valueOf(String.valueOf(binding_activity_goal_start.editTextNumberPercent.getText()));
                 } catch (Exception ise) {
-                    number_percent = 0;
+                    number_percent = 0.0;
                 }
 
                 SQLiteDatabase database = dbHelper.getWritableDatabase();
@@ -680,6 +703,14 @@ public class GoalActivity extends AppCompatActivity {
 
                 database.insert(DBHelper.TABLE_GOAL, null, contentValues);
                 database.insert(DBHelper.TABLE_CAPITAL, null, contentValues_capital);
+
+                // ---- добавление данных в Firebase
+                Goal goal = new Goal(name_goal, number_sum, number_start_sum, number_percent, number_inflation, 1);
+                Capital capital = new Capital(String.valueOf(date_now), number_start_sum, "1");
+
+                ConnectRealtimeDatabase.getInstance(this).saveGoal(firebaseAuth.getCurrentUser().getUid(), goal);
+                ConnectRealtimeDatabase.getInstance(this).saveCapital(firebaseAuth.getCurrentUser().getUid(), capital);
+                // --- данные добавлены
 
                 Toast.makeText(this, "Цель добавлена", Toast.LENGTH_SHORT).show();
 

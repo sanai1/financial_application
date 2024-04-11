@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -69,6 +68,5 @@ public class ReportActivity extends AppCompatActivity {
 
     public void menu(View view) {
         binding_activity_report.drawerLayoutId.openDrawer(GravityCompat.START);
-        Toast.makeText(this, "Меню", Toast.LENGTH_SHORT).show();
     }
 }

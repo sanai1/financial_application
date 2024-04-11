@@ -14,8 +14,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public static final String TABLE_HISTORY = "history";
-    public static final String COLUMN_UID = "uid", COLUMN_IS_BIG_PURCHASE = "is_big_purchase", // COLUMN_IS_EXPENSE = "is_expense",
-            COLUMN_SUMMA = "summa",  COLUMN_ADD_DATA = "add_data", COLUMN_CATEGORY_UID = "category_uid";
+    public static final String COLUMN_UID = "uid", COLUMN_IS_BIG_PURCHASE = "is_big_purchase", COLUMN_SUMMA = "summa",
+            COLUMN_ADD_DATA = "add_data", COLUMN_CATEGORY_UID = "category_uid", COLUMN_COMMENT = "comment";
 
 
     public static final String TABLE_GOAL = "goal";
@@ -28,12 +28,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public static final String TABLE_CALCULATION_INFO = "calculation_info";
-    public static final String COLUMN_DATE_CALCULATION = "date_calculation", COLUMN_TEMP_GOAL = "temp_goal",
+    public static final String COLUMN_CALCULATION_ID = "id", COLUMN_DATE_CALCULATION = "date_calculation", COLUMN_TEMP_GOAL = "temp_goal",
             COLUMN_DATE_FINISH = "date_finish", COLUMN_PERCENT_DATE = "percent_date";
-
-
-    public static final String TABLE_COMMENTS = "comments";
-    public static final String COLUMN_UID_COMMENT = "uid_comment", COLUMN_COMMENT = "comment";
 
 
     public DBHelper(Context context) {
@@ -45,11 +41,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String command_one = "create table " + TABLE_HISTORY + "(" +
                 COLUMN_UID + " text," +
-//                COLUMN_IS_EXPENSE + " integer," +
                 COLUMN_IS_BIG_PURCHASE + " integer," +
                 COLUMN_SUMMA + " real," +
                 COLUMN_ADD_DATA + " text," +
-                COLUMN_CATEGORY_UID + " text)";
+                COLUMN_CATEGORY_UID + " text," +
+                COLUMN_COMMENT + " text)";
         db.execSQL(command_one);
 
         String command_two = "create table " + TABLE_CATEGORY + "(" +
@@ -74,16 +70,12 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(command_four);
 
         String command_five = "create table " + TABLE_CALCULATION_INFO + "(" +
+                COLUMN_CALCULATION_ID + " text," +
                 COLUMN_DATE_CALCULATION + " text, " +
                 COLUMN_TEMP_GOAL + " integer, " +
                 COLUMN_DATE_FINISH + " text, " +
                 COLUMN_PERCENT_DATE + " real)";
         db.execSQL(command_five);
-
-        String command_six = "create table " + TABLE_COMMENTS + "(" +
-                COLUMN_UID_COMMENT + " text, " +
-                COLUMN_COMMENT + " text)";
-        db.execSQL(command_six);
     }
 
     @Override
@@ -103,9 +95,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
             String command_five = "drop table if exists " + TABLE_CALCULATION_INFO;
             db.execSQL(command_five);
-
-            String command_six = "drop table if exists " + TABLE_COMMENTS;
-            db.execSQL(command_six);
 
             onCreate(db);
         }

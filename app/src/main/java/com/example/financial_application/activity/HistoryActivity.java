@@ -110,9 +110,9 @@ public class HistoryActivity extends AppCompatActivity {
                 Toast.makeText(HistoryActivity.this, historyState.getComment(), Toast.LENGTH_SHORT).show();
             }
         };
-        String command = "select " + DBHelper.COLUMN_IS_BIG_PURCHASE + ", " + //  + DBHelper.COLUMN_IS_EXPENSE + ", "
+        String command = "select " + DBHelper.COLUMN_IS_BIG_PURCHASE + ", " +
                 DBHelper.COLUMN_SUMMA + ", " + DBHelper.COLUMN_ADD_DATA + ", " + DBHelper.COLUMN_CATEGORY_UID + ", " +
-                DBHelper.COLUMN_UID + " from " + DBHelper.TABLE_HISTORY;
+                DBHelper.COLUMN_COMMENT + " from " + DBHelper.TABLE_HISTORY;
         // TODO: сделать сортировку записей истории (от самой последней к самой старой записи)
         Cursor cursor = database.rawQuery(command, null);
 
@@ -126,16 +126,12 @@ public class HistoryActivity extends AppCompatActivity {
         }
         cursor_get_category.close();
 
-        String name, command_comments, command_expense;
+        String name, command_expense;
         while (cursor.moveToNext()) {
             int[] color = {76, 175, 80};
             name = hashMapName.get(cursor.getString(3));
 
-            command_comments = "select " + DBHelper.COLUMN_COMMENT + " from " + DBHelper.TABLE_COMMENTS + " where " + DBHelper.COLUMN_UID_COMMENT + " = '" + cursor.getString(4) + "'";
-            Cursor cursor_comment = database.rawQuery(command_comments, null);
-            cursor_comment.moveToNext();
-            String comment = cursor_comment.getString(0);
-            cursor_comment.close();
+            String comment = cursor.getString(4);
             if (comment.length() == 0) {
                 comment = "нет комментария";
             }
@@ -165,6 +161,5 @@ public class HistoryActivity extends AppCompatActivity {
 
     public void menu(View view) {
         binding_activity_history.drawerLayoutId.openDrawer(GravityCompat.START);
-        Toast.makeText(this, "Меню", Toast.LENGTH_SHORT).show();
     }
 }

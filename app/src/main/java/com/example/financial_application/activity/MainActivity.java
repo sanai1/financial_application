@@ -19,14 +19,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 
+import com.example.financial_application.ConnectRealtimeDatabase;
 import com.example.financial_application.DBHelper;
 import com.example.financial_application.R;
 import com.example.financial_application.authorization.AuthorizationActivity;
 import com.example.financial_application.databinding.ActivityMainBinding;
 import com.example.financial_application.databinding.AddCategoryBinding;
 import com.example.financial_application.dialog_fragment.CategoryDialog;
+import com.example.financial_application.users.Category;
+import com.example.financial_application.users.History;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 import java.util.UUID;
@@ -43,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
     protected String[] mas_name_category_expense = new String[50];
     protected String[] mas_name_category_income = new String[50];
     public static int count_category = 0;
+    private DatabaseReference root;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +100,9 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         setInitialDate();
         dialog_category = new CategoryDialog();
         dialog_category.setMyDialogListener(this);
+
+        root = FirebaseDatabase.getInstance().getReference().getRoot();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         get_mas_expense();
     }
@@ -189,12 +199,17 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
         database = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        UUID uuid = UUID.randomUUID();
-        contentValues.put(DBHelper.COLUMN_CATEGORY_ID, String.valueOf(uuid));
+        String uuid = UUID.randomUUID().toString();
+        contentValues.put(DBHelper.COLUMN_CATEGORY_ID, uuid);
         contentValues.put(DBHelper.COLUMN_EXPENSE, expense);
         contentValues.put(DBHelper.COLUMN_CATEGORY_T_C, name_category);
 
         database.insert(DBHelper.TABLE_CATEGORY, null, contentValues);
+
+        // ---- добавление данных в Firebase
+        Category category = new Category(uuid, name_category, expense);
+        ConnectRealtimeDatabase.getInstance(this).saveCategory(firebaseAuth.getCurrentUser().getUid(), category);
+        // --- данные добавлены
 
         if (expense == 1) {
             String[] mas_test_expense = new String[mas_name_category_expense.length + 1];
@@ -245,7 +260,6 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
 
     public void menu(View view) {
         binding_activity_main.drawerLayoutId.openDrawer(GravityCompat.START);
-//        Toast.makeText(this, "Меню", Toast.LENGTH_SHORT).show();
     }
 
     public void save_expense(View view) {
@@ -257,19 +271,17 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
                     " where " + DBHelper.COLUMN_CATEGORY_T_C + " = '" + binding_activity_main.spinner.getSelectedItem().toString() + "'";
             Cursor cursorUid = database.rawQuery(command_get_category, null);
             cursorUid.moveToNext();
-            contentValues.put(DBHelper.COLUMN_CATEGORY_UID, cursorUid.getString(0));
+            String category_id = cursorUid.getString(0);
             cursorUid.close();
+            contentValues.put(DBHelper.COLUMN_CATEGORY_UID, category_id);
 
-//            if (expense_main) {
-//                contentValues.put(DBHelper.COLUMN_IS_EXPENSE, 1);
-//            } else {
-//                contentValues.put(DBHelper.COLUMN_IS_EXPENSE, 0);
-//            }
+            Integer is_big_purchase;
             if (binding_activity_main.checkBoxBidPurchase.isChecked()) {
-                contentValues.put(DBHelper.COLUMN_IS_BIG_PURCHASE, 1);
+                is_big_purchase = 1;
             } else {
-                contentValues.put(DBHelper.COLUMN_IS_BIG_PURCHASE, 0);
+                is_big_purchase = 0;
             }
+            contentValues.put(DBHelper.COLUMN_IS_BIG_PURCHASE, is_big_purchase);
 
             double sum = Double.parseDouble(binding_activity_main.editTextNumberSum.getText().toString());
             contentValues.put(DBHelper.COLUMN_SUMMA, sum);
@@ -283,17 +295,18 @@ public class MainActivity extends AppCompatActivity implements CategoryDialog.Di
             if (day.length() == 1) {
                 day = "0" + day;
             }
-            // TODO: сделать "обнуление" даты после сохранения транзакции
-            contentValues.put(DBHelper.COLUMN_ADD_DATA, day + "." + month + "." + year);
+            String date = day + "." + month + "." + year;
+            contentValues.put(DBHelper.COLUMN_ADD_DATA, date);
             String uid = UUID.randomUUID().toString();
+            String comment = binding_activity_main.editTextComment.getText().toString();
             contentValues.put(DBHelper.COLUMN_UID, uid);
+            contentValues.put(DBHelper.COLUMN_COMMENT, comment);
             database.insert(DBHelper.TABLE_HISTORY, null, contentValues);
 
-            ContentValues contentValuesComment = new ContentValues();
-            contentValuesComment.put(DBHelper.COLUMN_UID_COMMENT, uid);
-            String comment = binding_activity_main.editTextComment.getText().toString();
-            contentValuesComment.put(DBHelper.COLUMN_COMMENT, comment);
-            database.insert(DBHelper.TABLE_COMMENTS, null, contentValuesComment);
+            // добавление данных в Firebase
+            History history = new History(uid, is_big_purchase, sum, date, category_id, comment);
+            ConnectRealtimeDatabase.getInstance(this).saveHistory(firebaseAuth.getCurrentUser().getUid(), history);
+            // данные добавлены
 
             binding_activity_main.editTextNumberSum.setText("");
             binding_activity_main.checkBoxBidPurchase.setChecked(false);

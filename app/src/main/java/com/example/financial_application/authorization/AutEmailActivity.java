@@ -10,9 +10,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.financial_application.ConnectRealtimeDatabase;
 import com.example.financial_application.R;
 import com.example.financial_application.activity.MainActivity;
 import com.example.financial_application.databinding.AutEmailBinding;
+import com.example.financial_application.users.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -35,7 +37,7 @@ public class AutEmailActivity extends AppCompatActivity {
         super.onStart();
 
         if (firebaseAuth.getCurrentUser() != null)
-            goToMainActivity();
+            goToMainActivity(false, firebaseAuth.getCurrentUser().getUid());
     }
 
     public void not_registered_yet(View view) {
@@ -75,7 +77,7 @@ public class AutEmailActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Пользователь авторизован
                             Log.d(TAG, "signInWithEmail:success");
-                            goToMainActivity();
+                            goToMainActivity(false, firebaseAuth.getCurrentUser().getUid());
                         } else {
                             // Произошла ошибка при авторизации пользователя
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -106,7 +108,7 @@ public class AutEmailActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Пользователь успешно создан
                             Log.d(TAG, "createUserWithEmail:success");
-                            goToMainActivity();
+                            goToMainActivity(true, firebaseAuth.getCurrentUser().getUid());
                         } else {
                             // Произошла ошибка при создании пользователя
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -115,7 +117,6 @@ public class AutEmailActivity extends AppCompatActivity {
                         }
                     }
                 });
-
     }
 
     private Pair<String, String> getUserInfo() {
@@ -128,7 +129,12 @@ public class AutEmailActivity extends AppCompatActivity {
         return Pair.create(login, password);
     }
 
-    private void goToMainActivity() {
+    private void goToMainActivity(boolean is_reg, String uid) {
+        if (is_reg) {
+            User user = new User(uid);
+
+            ConnectRealtimeDatabase.getInstance(this).saveUser(user);
+        }
         Intent intent = new Intent(AutEmailActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

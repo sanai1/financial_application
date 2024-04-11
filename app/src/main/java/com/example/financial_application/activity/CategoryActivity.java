@@ -16,17 +16,21 @@ import androidx.core.view.GravityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.financial_application.authorization.AuthorizationActivity;
-import com.example.financial_application.dialog_fragment.CategoryUpdateDialog;
-import com.example.financial_application.dialog_fragment.CategoryDialog;
-import com.example.financial_application.adapter_state.CategoryState;
-import com.example.financial_application.adapter_state.CategoryStateAdapter;
+import com.example.financial_application.ConnectRealtimeDatabase;
 import com.example.financial_application.DBHelper;
 import com.example.financial_application.R;
+import com.example.financial_application.adapter_state.CategoryState;
+import com.example.financial_application.adapter_state.CategoryStateAdapter;
+import com.example.financial_application.authorization.AuthorizationActivity;
 import com.example.financial_application.databinding.ActivityCategoryBinding;
 import com.example.financial_application.databinding.AddCategoryBinding;
+import com.example.financial_application.dialog_fragment.CategoryDialog;
+import com.example.financial_application.dialog_fragment.CategoryUpdateDialog;
+import com.example.financial_application.users.Category;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +47,8 @@ public class CategoryActivity extends AppCompatActivity implements CategoryDialo
     private CategoryDialog categoryAddDialog;
     private CategoryUpdateDialog categoryUpdateDialog;
     private boolean expenseButton = true;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference root;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,9 @@ public class CategoryActivity extends AppCompatActivity implements CategoryDialo
 
         categoryAddDialog = new CategoryDialog();
         categoryAddDialog.setMyDialogListener(this);
+
+        root = FirebaseDatabase.getInstance().getReference().getRoot();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         binding_activity_category.categoryNavigationMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -147,7 +156,6 @@ public class CategoryActivity extends AppCompatActivity implements CategoryDialo
 
     public void menu(View view) {
         binding_activity_category.drawerLayoutId.openDrawer(GravityCompat.START);
-        Toast.makeText(this, "Меню", Toast.LENGTH_SHORT).show();
     }
 
     public void btn_expense_category(View view) {
@@ -182,12 +190,19 @@ public class CategoryActivity extends AppCompatActivity implements CategoryDialo
         database = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        UUID uuid = UUID.randomUUID();
-        contentValues.put(DBHelper.COLUMN_CATEGORY_ID, String.valueOf(uuid));
+        String uuid = UUID.randomUUID().toString();
+        contentValues.put(DBHelper.COLUMN_CATEGORY_ID, uuid);
         contentValues.put(DBHelper.COLUMN_EXPENSE, expense);
         contentValues.put(DBHelper.COLUMN_CATEGORY_T_C, name_category);
 
         database.insert(DBHelper.TABLE_CATEGORY, null, contentValues);
+
+        // ---- добавление данных в Firebase
+        Category category = new Category(uuid, name_category, expense);
+        ConnectRealtimeDatabase.getInstance(this).saveCategory(firebaseAuth.getCurrentUser().getUid(), category);
+        // --- данные добавлены
+
+        // TODO: сделать обновление списка с категориями
 
         Toast.makeText(this, "Категория добавлена", Toast.LENGTH_SHORT).show();
     }
@@ -199,6 +214,11 @@ public class CategoryActivity extends AppCompatActivity implements CategoryDialo
         contentValues.put(DBHelper.COLUMN_EXPENSE, expense);
 
         database.update(DBHelper.TABLE_CATEGORY, contentValues, DBHelper.COLUMN_CATEGORY_ID + " = '" + uid + "'", null);
+
+        // ---- обновление данных в Firebase
+        Category category = new Category(uid, name, expense);
+        ConnectRealtimeDatabase.getInstance(this).saveCategory(firebaseAuth.getCurrentUser().getUid(), category);
+        // --- данные обновлены
 
         update_view(expenseButton);
 

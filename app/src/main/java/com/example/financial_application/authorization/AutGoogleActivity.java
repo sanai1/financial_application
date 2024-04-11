@@ -46,7 +46,7 @@ public class AutGoogleActivity extends AppCompatActivity {
         super.onStart();
 
         if (firebaseAuth.getCurrentUser() != null)
-            goToMainActivity();
+            goToMainActivity(firebaseAuth.getCurrentUser().getUid());
     }
 
     public void btn(View view) {
@@ -68,7 +68,7 @@ public class AutGoogleActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    goToMainActivity();
+                                    goToMainActivity(firebaseAuth.getCurrentUser().getUid());
                                 } else {
                                     Toast.makeText(AutGoogleActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
@@ -80,7 +80,12 @@ public class AutGoogleActivity extends AppCompatActivity {
         }
     }
 
-    private void goToMainActivity() {
+    private void goToMainActivity(String uid) {
+
+//        if (is_reg) {
+//            User user = new User(uid, 0);
+//            ConnectRealtimeDatabase.getInstance(this).saveUser(user);
+//        }
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }
