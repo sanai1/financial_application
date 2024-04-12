@@ -28,7 +28,7 @@
         android:ems="10"
         android:layout_marginTop="50dp"
         android:gravity="center"
-        android:hint="Введите почту"
+        android:hint="Введите email"
         android:inputType="textEmailAddress"
         android:textColor="@color/black"
         android:textColorHint="@color/gray"

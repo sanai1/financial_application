@@ -9,9 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.financial_application.ConnectRealtimeDatabase;
 import com.example.financial_application.R;
 import com.example.financial_application.activity.MainActivity;
 import com.example.financial_application.databinding.AutGoogleBinding;
+import com.example.financial_application.users.Goal;
+import com.example.financial_application.users.Info;
+import com.example.financial_application.users.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -81,11 +85,11 @@ public class AutGoogleActivity extends AppCompatActivity {
     }
 
     private void goToMainActivity(String uid) {
+        User user = new User(uid);
+        Info info = new Info(uid, 0);
+        Goal goal = new Goal("", 0.0, 0.0, 0.0, 0.0, 1);
 
-//        if (is_reg) {
-//            User user = new User(uid, 0);
-//            ConnectRealtimeDatabase.getInstance(this).saveUser(user);
-//        }
+        ConnectRealtimeDatabase.getInstance(this).checkUser(user, info, goal);
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }

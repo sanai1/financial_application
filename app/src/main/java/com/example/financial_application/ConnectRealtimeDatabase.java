@@ -9,11 +9,16 @@ import com.example.financial_application.users.Capital;
 import com.example.financial_application.users.Category;
 import com.example.financial_application.users.Goal;
 import com.example.financial_application.users.History;
+import com.example.financial_application.users.Info;
 import com.example.financial_application.users.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class ConnectRealtimeDatabase {
     private static ConnectRealtimeDatabase INSTANCE;
@@ -31,8 +36,8 @@ public class ConnectRealtimeDatabase {
     }
 
 
-    public void saveUser(User user) {
-        root.child(user.getUid()).child("info").setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+    public void saveUser(User user, Info info, Goal goal) {
+        root.child(user.getUid()).child("info").setValue(info).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (!task.isComplete())
@@ -53,7 +58,7 @@ public class ConnectRealtimeDatabase {
                     System.out.println("Ошибка при добавлении Capital");
             }
         });
-        root.child(user.getUid()).child("goal").setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+        root.child(user.getUid()).child("goal").setValue(goal).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (!task.isComplete())
@@ -135,6 +140,26 @@ public class ConnectRealtimeDatabase {
             public void onComplete(@NonNull Task<Void> task) {
                 if (!task.isComplete())
                     System.out.println("Ошибка при добавлении CalculatorInfo");
+            }
+        });
+    }
+
+    public void checkUser(User user, Info info, Goal goal) {
+        Query query = root.equalTo(user.getUid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.getChildrenCount() > 0) {
+                    System.out.println("User found");
+                } else {
+                    System.out.println("User not found");
+                    saveUser(user, info, goal);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

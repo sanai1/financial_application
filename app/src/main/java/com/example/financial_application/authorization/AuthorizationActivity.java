@@ -39,8 +39,8 @@ public class AuthorizationActivity extends AppCompatActivity {
 
     public void btn_aut_google(View view) {
         Intent intent = new Intent(AuthorizationActivity.this, AutGoogleActivity.class);
-        Toast.makeText(this, "Попробуйте другой способ", Toast.LENGTH_SHORT).show();
-//        startActivity(intent);
+//        Toast.makeText(this, "Попробуйте другой способ", Toast.LENGTH_SHORT).show();
+        startActivity(intent);
     }
 
     public void btn_aut_phone(View view) {
